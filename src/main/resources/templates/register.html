@@ -1,0 +1,94 @@
+<!DOCTYPE html >
+<html  xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Log Java - Đăng ký</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+    <!-- Custom Theme files -->
+    <link href="../static/css/register.css" th:href="@{/css/register.css}" rel="stylesheet" type="text/css" media="all" />
+    <link href="../static/css/toast.css" th:href="@{/css/toast.css}" rel="stylesheet">
+    <script src="../static/jquery/jquery-3.6.4.min.js" th:src="@{/jquery/jquery-3.6.4.min.js}"></script>
+    <script src="../static/js/toast.js" th:src="@{/js/toast.js}"></script>
+    <link rel="stylesheet"  href="../static/fonts/fontawesome/css/font-awesome.min.css" th:href="@{/fonts/fontawesome/css/font-awesome.min.css}">
+    <!-- //Custom Theme files -->
+    <!-- web font -->
+    <link href="//fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i" rel="stylesheet">
+
+</head>
+<body>
+<!-- main -->
+<div class="main-w3layouts wrapper">
+    <h1>Đăng ký tài khoản mới</h1>
+    <div class="main-agileinfo">
+        <div class="agileits-top">
+            <form action="#" method="post" id="formSubmit">
+                <input class="text" type="text" name="username" placeholder="Tài khoản" required="" id="username">
+                <input class="text email" type="email" name="email" placeholder="Email" required="">
+                <input class="text email" type="text" name="fullname" placeholder="Tên đầy đủ" required="">
+                <input class="text" type="password" name="password" placeholder="Mật khẩu" required="">
+                <input class="text w3lpass" type="password" name="password" placeholder="Nhập lại mật khẩu" required="">
+                <div class="wthree-text">
+                    <label class="anim">
+                        <input type="checkbox" class="checkbox" required="">
+                        <span>Tôi đồng ý với điều khoản</span>
+                    </label>
+                    <div class="clear"> </div>
+                </div>
+                <input type="submit" value="Đăng ký" id="addUser">
+            </form>
+            <p>Bạn đã có tài khoản ? <a th:href="@{/login-page}"> Đăng nhập ngay!</a></p>
+        </div>
+    </div>
+    <!-- copyright -->
+    <div class="colorlibcopy-agile">
+        <p>© 2023 Log Java</p>
+    </div>
+    <!-- //copyright -->
+    <ul class="colorlib-bubbles">
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
+</div>
+<div id="toast"></div>
+<script>
+    $('#addUser').click(function (e){
+        e.preventDefault();
+        var data = {};
+        var fromData = $('#formSubmit').serializeArray();
+        $.each(fromData,function (i,v){
+            data[""+v.name+""]=v.value;
+        });
+        console.log(data);
+        addUser(data);
+    });
+    function addUser(data){
+        $.ajax({
+            url:'http://localhost:8080/api/v1/user',
+            type:'POST',
+            data:JSON.stringify(data),
+            contentType:'application/json',
+            dataType:'json',
+            success:function (result){
+                showSuccessToast();
+                setTimeout(function(){
+                    window.location.href = "/login-page";
+                },5000);
+            },
+            error:function (error){
+                console.log(error);
+            }
+        });
+    }
+</script>
+<!-- //main -->
+</body>
+</html>

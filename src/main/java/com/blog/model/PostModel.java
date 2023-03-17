@@ -1,0 +1,14 @@
+package com.blog.model;
+
+import lombok.Data;
+
+@Data
+public class PostModel extends AbstractModel{
+    private String title;
+    private String thumbnail;
+    private String shortDescription;
+    private String image;
+    private String content;
+    private Long categoryId;
+    private String categoryCode;
+}
