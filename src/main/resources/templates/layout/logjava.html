@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Log Java</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" href="../static/images/icons8-oak-leaf-32.png" th:href="@{/images/icons8-oak-leaf-32.png}" type="image/png"
+          sizes="32x32">
+    <link href="https://fonts.googleapis.com/css?family=Josefin+Sans:300, 400,700|Inconsolata:400,700" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
+    <link rel="stylesheet" th:href="@{/css/animate.css}">
+    <link rel="stylesheet" th:href="@{/css/owl.carousel.min.css}">
+    <link rel="stylesheet" th:href="@{/css/toast.css}">
+    <link rel="stylesheet" th:href="@{/fonts/ionicons/css/ionicons.min.css}">
+    <link rel="stylesheet" th:href="@{/fonts/fontawesome/css/font-awesome.min.css}">
+    <link rel="stylesheet" th:href="@{/fonts/flaticon/font/flaticon.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+
+    <script type="text/javascript" src="../static/jquery/jquery-3.6.4.min.js"
+            th:src="@{/jquery/jquery-3.6.4.min.js}"></script>
+    <script type="text/javascript" src="../static/jquery/jquery.twbsPagination.min.js"
+            th:src="@{/jquery/jquery.twbsPagination.js}"></script>
+</head>
+<body>
+<header role="banner" th:fragment="header">
+    <div class="container logo-wrap">
+        <div class="row pt-5">
+            <div class="col-12 text-center">
+                <a class="absolute-toggle d-block d-md-none" data-toggle="collapse" href="#navbarMenu" role="button"
+                   aria-expanded="false" aria-controls="navbarMenu"><span class="burger-lines"></span></a>
+                <h1 class="site-logo"><img src="../static/images/spring.png" th:src="@{/images/spring.png}" class="p-2 mb-5" width="100vh" height="100vh"><a
+                       th:href="@{/home}" style="color: #52BFA1;">Log Java</a></h1>
+            </div>
+        </div>
+    </div>
+
+    <nav class="navbar navbar-expand-md  navbar-light bg-light">
+        <div class="container">
+            <div class="collapse navbar-collapse" id="navbarMenu">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/home}">Trang chủ</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="dropdown06" data-toggle="dropdown"
+                           aria-haspopup="true"
+                           aria-expanded="false">Blog</a>
+                        <div class="dropdown-menu" aria-labelledby="dropdown05">
+                            <a class="dropdown-item" href="#">Java</a>
+                            <a class="dropdown-item" href="#">Spring</a>
+                            <a class="dropdown-item" href="#">Hibernate</a>
+                            <a class="dropdown-item" href="#">Tomcat</a>
+                            <a class="dropdown-item" href="#">Docker</a>
+                            <a class="dropdown-item" href="#">Khác</a>
+                        </div>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showWarningToast();">Hỏi đáp</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showWarningToast();">Tâm sự ngắn</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showWarningToast();">Tài liệu</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Tools</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Khác</a>
+                    </li>
+                </ul>
+                <form class="form-inline my-2 my-lg-0">
+                    <ul class="navbar-nav mx-auto">
+                        <th:block th:if="${userSession}">
+                            <a class="nav-link active" href="#"><i class="fa fa-bell-o" aria-hidden="true"></i></a>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle active" href="#" id="dropdown05"
+                                   data-toggle="dropdown"
+                                   aria-haspopup="true" aria-expanded="false"><i class="fa fa-user-circle-o"
+                                                                                 aria-hidden="true"></i>
+                                    <th:block th:text="${userSession.username}"></th:block>
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="dropdown05">
+                                    <a class="dropdown-item" href="#">Trang cá nhân</a>
+                                    <a class="dropdown-item" th:href="@{/post}">Viết blog</a>
+                                    <a class="dropdown-item" href="#">Bài viết của tôi</a>
+                                    <a class="dropdown-item" href="#">Cài đặt</a>
+                                    <a class="dropdown-item" th:href="@{/logout}">Đăng xuất</a>
+                                </div>
+                        </th:block>
+                        <th:block th:unless="${userSession}">
+                            <a th:href="@{/login-page}" class="nav-link"><i class="fa fa-sign-in"
+                                                                            aria-hidden="true"></i> Đăng
+                                nhập</a>
+                            <a th:href="@{/dang-ky}" class="nav-link"><i class="fa fa-user-plus" aria-hidden="true"></i>
+                                Đăng
+                                ký</a>
+                        </th:block>
+                        </li>
+                    </ul>
+                </form>
+            </div>
+        </div>
+    </nav>
+</header>
+<div class="sidebar-box search-form-wrap" th:fragment="search">
+    <form action="#" class="search-form">
+        <div class="form-group">
+            <span class="icon fa fa-search"></span>
+            <input type="text" class="form-control" id="s" placeholder="Nhập từ khoá để tìm kiếm">
+        </div>
+    </form>
+</div>
+<!-- END sidebar-box -->
+<div class="sidebar-box" th:fragment="avatar">
+    <div class="bio text-center">
+        <div class="bio-body">
+            <h2>Log Java</h2>
+            <p> Nơi chia sẻ các kiến thức,thủ thuật và các lỗi thường gặp phải liên quan đến Spring và Java .</p>
+            <p><a href="#" class="btn btn-primary btn-sm rounded"
+                  style="border-color: #28A745;background-color: #68BD45;" id="btnWrite" th:href="@{/post}">Viết
+                blog</a></p>
+            <p class="social">
+                <a href="#" class="p-2"><span class="fa fa-facebook"></span></a>
+                <a href="#" class="p-2"><span class="fa fa-twitter"></span></a>
+                <a href="#" class="p-2"><span class="fa fa-instagram"></span></a>
+                <a href="#" class="p-2"><span class="fa fa-youtube-play"></span></a>
+            </p>
+        </div>
+    </div>
+</div>
+<!-- END sidebar-box -->
+<div class="sidebar-box" th:fragment="popular-post">
+    <h3 class="heading">Bài viết nổi bật</h3>
+    <div class="post-entry-sidebar">
+        <ul th:each="post:${popular}">
+            <li>
+                <a th:href="@{/new-post/{id}(id=${post.id})}">
+                    <img th:src="@{'/' + ${post.image}}" alt="Image placeholder" class="mr-4">
+                    <div class="text">
+                        <h4 th:text="${post.title}"></h4>
+                        <div class="post-meta">
+                            <span class="mr-2" th:text="${post.createdDate}"></span>
+                        </div>
+                    </div>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+<!-- END sidebar-box -->
+
+<div class="sidebar-box" th:fragment="categories">
+    <h3 class="heading">Chủ đề</h3>
+    <ul class="categories" >
+        <th:block th:each="category:${categories}">
+            <li>
+                <a href="#">
+                <th:block th:text="${category.name}"></th:block>
+                <span >
+                    (<th:block th:text="${category.count}"></th:block>)
+                </span>
+                </a>
+            </li>
+        </th:block>
+    </ul>
+</div>
+<!-- END sidebar-box -->
+
+<div class="sidebar-box" th:fragment="tag">
+    <h3 class="heading">Tags</h3>
+    <ul class="tags">
+        <li><a href="#">Spring Boot</a></li>
+        <li><a href="#">Spring Data JPA</a></li>
+        <li><a href="#">DI</a></li>
+        <li><a href="#">IoC</a></li>
+        <li><a href="#">MySQL</a></li>
+        <li><a href="#">RESTful API</a></li>
+    </ul>
+</div>
+<footer class="site-footer" th:fragment="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <p>
+                    Log Java &copy; 2023
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+<!-- END footer -->
+
+</div>
+<script th:src="@{/js/toast.js}"></script>
+<script src="../static/js/jquery-3.2.1.min.js" th:src="@{/js/jquery-3.2.1.min.js}"></script>
+<script src="../static/js/jquery-migrate-3.0.0.js" th:src="@{/js/jquery-migrate-3.0.0.js}"></script>
+<script src="../static/js/popper.min.js" th:src="@{/js/popper.min.js}"></script>
+<script src="../static/js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
+<script src="../static/js/owl.carousel.min.js" th:src="@{/js/owl.carousel.min.js}"></script>
+<script src="../static/js/jquery.waypoints.min.js" th:src="@{/js/jquery.waypoints.min.js}"></script>
+<script src="../static/js/jquery.stellar.min.js" th:src="@{/js/jquery.stellar.min.js}"></script>
+<script src="../static/js/main.js" th:src="@{/js/main.js}"></script>
+</body>
+</html>

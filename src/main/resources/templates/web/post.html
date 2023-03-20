@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Log Java - Bài viết</title>
+    <th:block th:insert="~{/layout/logjava::link}"></th:block>
+    <th:block th:insert="~{/layout/logjava::head/script}"></th:block>
+    <style>
+        #status {
+            width: 200px;
+            height: 200px;
+            position: fixed;
+            left: 50%;
+            z-index: 100;
+            top: 50%;
+            background-image: url('../static/images/Ring-1s-200px.gif');
+            background-repeat: no-repeat;
+            background-position: center;
+            margin: -100px 0 0 -100px;
+            z-index: 1001
+        }
+
+        #loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #FFF;
+            z-index: 1000
+        }
+    </style>
+    <script>
+        $(window).bind("load", function() {
+            jQuery("#status").fadeOut(2000);
+            jQuery("#loader").fadeOut(2000);
+        });
+    </script>
+</head>
+<body>
+<div id='status'></div>
+<div id='loader'></div>
+<div class="wrap">
+    <header th:replace="~{/layout/logjava::header}"></header>
+    <section class="site-section py-sm">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6" >
+                    <h2 class="mb-4 mt-4">Bài viết</h2>
+                </div>
+            </div>
+            <div class="row blog-entries">
+                <div class="col-md-12 col-lg-8 main-content">
+                    <img th:src="@{${'/'+post.image}}" alt="Image"
+                         class="img-fluid mb-5">
+                    <div class="post-meta">
+                        <span class="author mr-2"><img src="../static/images/clover.jpg" th:src="@{/images/clover.jpg}" alt="Colorlib" class="mr-2"> Nguyên</span>&bullet;
+                        <span class="mr-2" th:text="${post.createdDate}"></span> &bullet;
+                        <span class="ml-2"><span class="fa fa-comments"></span> 3</span>
+                    </div>
+                    <h1 class="mb-4" th:text="${post.title}"></h1>
+                    <a class="category mb-5" href="#" style="background:#80EA6E;color: #111111!important;"><th:block th:text="${post.categoryName}"></th:block></a>
+                    <div class="post-content-body">
+                        <th:block th:utext="${post.content}"></th:block>
+                    </div>
+                    <div class="pt-5">
+                        <h3 class="mb-4">6 Comments</h3>
+                        <ul class="comment-list">
+                            <li class="comment">
+                                <div class="vcard">
+                                    <img src="../static/images/clover.jpg" th:src="@{/images/clover.jpg}" alt="Image placeholder">
+                                </div>
+                                <div class="comment-body">
+                                    <h3>Nguyên</h3>
+                                    <div class="meta">15 tháng 3, 2023 at 11:21pm</div>
+                                    <p>Bài viết hay</p>
+                                    <p><a href="#" class="reply rounded">Reply</a></p>
+                                </div>
+                            </li>
+
+                        </ul>
+                        <!-- END comment-list -->
+
+                        <div class="comment-form pt-5">
+                            <h3 class="mb-2">Để lại bình luận</h3>
+                            <form class="p-4 form-inline bg-light">
+                                <div class="form-group mb-2">
+                                    <div class="row">
+                                        <div class="col-sm-2">
+                        <span class="author mr-4">
+                          <img src="../static/images/clover.jpg" th:src="@{/images/clover.jpg}" class="rounded-circle" alt="Image placeholder" width="50vh"
+                               height="50vh">
+                        </span>
+                                        </div>
+                                        <div class="col-sm-10">
+                        <textarea type="text" class="form-control-range mr-5" id="comment"
+                                  placeholder="Viết bình luận "></textarea>
+                                        </div>
+                                    </div>
+                                    <button class="btn btn-primary btn-sm rounded" id="btnComment" style="margin-left: 12px;">Bình
+                                        luận</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 col-lg-4 sidebar">
+                    <div th:replace="~{/layout/logjava::search}"></div>
+                    <div th:replace="~{/layout/logjava::avatar}"></div>
+                    <div th:replace="~{/layout/logjava::popular-post}"></div>
+                    <div th:replace="~{/layout/logjava::categories}"></div>
+                    <div th:replace="~{/layout/logjava::tag}"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer th:replace="~{layout/logjava::footer}"></footer>
+</div>
+<script>
+    // var editor = '';
+    // $(document).ready(function () {
+    //     editor = CKEDITOR.replace('comment');
+    // });
+    // $('#btnSubmit').click(function (e) {
+    //     e.preventDefault();
+    //     var obj = editor.getData();
+    //     console.log(obj);
+    // })
+</script>
+<th:block th:insert="~{layout/logjava::script}"></th:block>
+</body>
+</html>

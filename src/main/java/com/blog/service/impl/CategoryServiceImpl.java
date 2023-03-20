@@ -17,4 +17,9 @@ public class CategoryServiceImpl implements CategoryService {
     public List<CategoryModel> findAll() {
         return categoryRepository.findAll();
     }
+
+    @Override
+    public List<CategoryModel> findAllNav() {
+        return categoryRepository.findAllNav();
+    }
 }

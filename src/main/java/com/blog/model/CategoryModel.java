@@ -6,4 +6,5 @@ import lombok.Data;
 public class CategoryModel extends AbstractModel{
     private String name;
     private String code;
+    private Integer count;
 }

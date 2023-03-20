@@ -20,12 +20,12 @@ public class UserController {
 
     @PostMapping ("/check-login")
     public String checkLogin(UserModel userModel,Model model) {
-        boolean isLogin = userService.checkLogin(userModel);
-        if (!isLogin){
-            session.setAttribute("message","success");
+        UserModel user = userService.checkLogin(userModel);
+        if (user==null){
+            session.setAttribute("message","Tài khoản hoặc mật khẩu không đúng!");
             return "redirect:/login-page";
         }
-        session.setAttribute("userSession",userModel);
+        session.setAttribute("userSession",user);
         return "redirect:/home";
     }
 
@@ -44,6 +44,6 @@ public class UserController {
     @GetMapping("/logout")
     public String logout(){
         session.removeAttribute("userSession");
-        return "index";
+        return "redirect:/home";
     }
 }

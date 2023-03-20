@@ -52,14 +52,7 @@ function showSuccessToast() {
     });
 }
 
-function showErrorToast() {
-    toast({
-        title: "Thất bại!",
-        message: "Các thông tin không hợp lệ",
-        type: "error",
-        duration: 5000
-    });
-}
+
 function showWarningToast() {
     toast({
         title: "Thông báo!",

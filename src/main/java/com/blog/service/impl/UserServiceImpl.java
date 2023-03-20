@@ -14,16 +14,16 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Override
-    public boolean checkLogin(UserModel userModel) {
+    public UserModel checkLogin(UserModel userModel) {
         UserModel userCheck = userRepository.findByUsername(userModel);
         if (userCheck!=null){
             if (userCheck.getPassword().equals(HashPassword.toSHA2(userModel.getPassword()))){
-                return true;
+                return userCheck;
             }else {
-                return false;
+                return null;
             }
         }
-        return false;
+        return null;
     }
 
     @Override

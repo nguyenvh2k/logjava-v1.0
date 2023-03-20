@@ -27,6 +27,7 @@ public class UserRepositoryImpl implements UserRepository {
             resultSet = statement.executeQuery();
             if (resultSet.next()){
                 user = new UserModel();
+                user.setId(resultSet.getLong("id"));
                 user.setUsername(resultSet.getString("username"));
                 user.setPassword(resultSet.getString("password"));
                 user.setEmail(resultSet.getString("email"));
@@ -54,13 +55,14 @@ public class UserRepositoryImpl implements UserRepository {
         try {
             connection = MySQLUtil.getConnection();
             connection.setAutoCommit(false);
-            String sql = "insert into users(username,password,email,fullname,role) values(?,?,?,?,?)";
+            String sql = "insert into users(username,password,email,fullname,roleid,status) values(?,?,?,?,?,?)";
             statement = connection.prepareStatement(sql);
             statement.setString(1,userModel.getUsername());
             statement.setString(2,userModel.getPassword());
             statement.setString(3,userModel.getEmail());
             statement.setString(4,userModel.getFullname());
             statement.setInt(5,userModel.getRole());
+            statement.setInt(6, 1);
             statement.executeUpdate();
             connection.commit();
             System.out.println("Insert success");

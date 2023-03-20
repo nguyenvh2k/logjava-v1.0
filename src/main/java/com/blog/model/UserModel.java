@@ -9,4 +9,5 @@ public class UserModel extends AbstractModel{
     private Integer role;
     private String fullname;
     private String email;
+    private String image;
 }
