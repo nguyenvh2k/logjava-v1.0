@@ -9,4 +9,5 @@ public interface PostService {
     List<PostModel> findByPopular();
     PostModel findById(Long id);
     Boolean insert(PostModel postModel);
+    List<PostModel> findComment(Long id);
 }

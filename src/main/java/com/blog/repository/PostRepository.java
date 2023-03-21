@@ -9,4 +9,5 @@ public interface PostRepository {
     PostModel findById(Long id);
     List<PostModel> findByPopular();
     Boolean insert(PostModel postModel);
+    List<PostModel> findComment(Long id);
 }

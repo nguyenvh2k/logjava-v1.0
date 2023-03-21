@@ -1,6 +1,8 @@
 package com.blog.repository.impl;
 
+import com.blog.model.Comment;
 import com.blog.model.PostModel;
+import com.blog.model.UserModel;
 import com.blog.repository.PostRepository;
 import com.blog.utils.MySQLUtil;
 import org.springframework.stereotype.Repository;
@@ -24,7 +26,14 @@ public class PostRepositoryImpl implements PostRepository {
         PreparedStatement statement = null;
         try {
             connection = MySQLUtil.getConnection();
-            String sql = "select * from posts";
+            String sql = "select\n" +
+                    "\t*\n" +
+                    "from\n" +
+                    "\tposts p\n" +
+                    "join users u on\n" +
+                    "\tu.id = p.user_id\n" +
+                    "join category c2 on\n" +
+                    "\tc2.id = p.category_id";
             statement = connection.prepareStatement(sql);
             resultSet = statement.executeQuery();
             while (resultSet.next()){
@@ -35,8 +44,14 @@ public class PostRepositoryImpl implements PostRepository {
                 postModel.setImage(resultSet.getString("image"));
                 postModel.setContent(resultSet.getString("content"));
                 postModel.setCreatedDate(resultSet.getTimestamp("created_date"));
+                postModel.setCategoryName(resultSet.getString("name"));
+                UserModel userModel = new UserModel();
+                userModel.setFullname(resultSet.getString("fullname"));
+                userModel.setUsername(resultSet.getString("username"));
+                postModel.setUserModel(userModel);
                 posts.add(postModel);
             }
+            System.out.println("Lay danh sach post thanh cong !");
         }catch (SQLException e){
             System.out.println("Xay ra exception!");
             System.out.println(e.getMessage());
@@ -52,7 +67,14 @@ public class PostRepositoryImpl implements PostRepository {
         PreparedStatement statement = null;
         try {
             connection = MySQLUtil.getConnection();
-            String sql = "select * from posts s join category c on c.id = s.category_id where s.id=?";
+            String sql = "select\n" +
+                    "\t*\n" +
+                    "from\n" +
+                    "\tposts p\n" +
+                    "join users u on\n" +
+                    "\tu.id = p.user_id\n" +
+                    "join category c2 on\n" +
+                    "\tc2.id = p.category_id where p.id = ?;";
             statement = connection.prepareStatement(sql);
             statement.setLong(1,id);
             resultSet = statement.executeQuery();
@@ -64,7 +86,13 @@ public class PostRepositoryImpl implements PostRepository {
                 postModel.setContent(resultSet.getString("content"));
                 postModel.setCategoryName(resultSet.getString("name"));
                 postModel.setCreatedDate(resultSet.getTimestamp("created_date"));
+                postModel.setUserId(resultSet.getLong("user_id"));
+                UserModel userModel = new UserModel();
+                userModel.setFullname(resultSet.getString("fullname"));
+                userModel.setUsername(resultSet.getString("username"));
+                postModel.setUserModel(userModel);
             }
+            System.out.println("Lay danh sach post thanh cong !");
         }catch (SQLException e){
             System.out.println("Xay ra exception!");
             System.out.println(e.getMessage());
@@ -93,6 +121,7 @@ public class PostRepositoryImpl implements PostRepository {
                 postModel.setCreatedDate(resultSet.getTimestamp("created_date"));
                 posts.add(postModel);
             }
+            System.out.println("Lay danh sach post thanh cong !");
         }catch (SQLException e){
             System.out.println("Xay ra exception!");
             System.out.println(e.getMessage());
@@ -140,6 +169,54 @@ public class PostRepositoryImpl implements PostRepository {
             }
         }
         return false;
+    }
+
+    public List<PostModel> findComment(Long id){
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        List<PostModel> commentList = new ArrayList<>();
+        try {
+            connection = MySQLUtil.getConnection();
+            connection.setAutoCommit(false);
+            String sql = "select\n" +
+                    "\tc.content ,u.username ,u.fullname \n,c.created_date  " +
+                    "from\n" +
+                    "\tposts p\n" +
+                    "left join comment c on\n" +
+                    "\tc.new_id = p.id\n" +
+                    "left join users u on\n" +
+                    "\tu.id = c.user_id\n" +
+                    "join category c2 on\n" +
+                    "\tc2.id = p.category_id where p.id = ?;";
+            statement = connection.prepareStatement(sql);
+            statement.setLong(1,id);
+            resultSet = statement.executeQuery();
+            while (resultSet.next()){
+                PostModel postModel = new PostModel();
+                Comment comment = new Comment();
+                comment.setContent(resultSet.getString("content"));
+                comment.setCreatedDate(resultSet.getTimestamp("created_date"));
+                UserModel userModel = new UserModel();
+                userModel.setUsername(resultSet.getString("username"));
+                userModel.setFullname(resultSet.getString("fullname"));
+                postModel.setComment(comment);
+                postModel.setUserModel(userModel);
+                commentList.add(postModel);
+            }
+        }catch (SQLException e){
+            System.out.println("xay ra exception khi find comment :");
+            System.out.println(e.getMessage());
+        }finally {
+            try {
+                connection.close();
+                resultSet.close();
+                statement.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return commentList;
     }
 
     

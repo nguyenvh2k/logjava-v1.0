@@ -67,6 +67,8 @@ public class PostController {
         model.addAttribute("popular",postPopular);
         PostModel post = postService.findById(id);
         model.addAttribute("post",post);
+        List<PostModel> commentList = postService.findComment(id);
+        model.addAttribute("comments",commentList);
         return "/web/post";
     }
 }

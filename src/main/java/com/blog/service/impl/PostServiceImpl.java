@@ -37,11 +37,16 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Boolean insert(PostModel postModel) {
-        CategoryModel category = categoryRepository.findByName(postModel.getCategoryName());
+        CategoryModel category = categoryRepository.findByName(postModel.getCategoryCode());
         postModel.setCategoryId(category.getId());
         postModel.setCreatedDate(new Timestamp(System.currentTimeMillis()));
         postModel.setCreatedBy("ADMIN");
         return postRepository.insert(postModel);
+    }
+
+    @Override
+    public List<PostModel> findComment(Long id) {
+        return postRepository.findComment(id);
     }
 
 }

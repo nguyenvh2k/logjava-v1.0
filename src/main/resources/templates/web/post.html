@@ -55,7 +55,7 @@
                     <img th:src="@{${'/'+post.image}}" alt="Image"
                          class="img-fluid mb-5">
                     <div class="post-meta">
-                        <span class="author mr-2"><img src="../static/images/clover.jpg" th:src="@{/images/clover.jpg}" alt="Colorlib" class="mr-2"> Nguyên</span>&bullet;
+                        <span class="author mr-2"><img src="../static/images/clover.jpg" th:src="@{/images/clover.jpg}" alt="Colorlib" class="mr-2" th:text="${post.userModel.getFullname}"></span>&bullet;
                         <span class="mr-2" th:text="${post.createdDate}"></span> &bullet;
                         <span class="ml-2"><span class="fa fa-comments"></span> 3</span>
                     </div>
@@ -67,41 +67,51 @@
                     <div class="pt-5">
                         <h3 class="mb-4">6 Comments</h3>
                         <ul class="comment-list">
-                            <li class="comment">
-                                <div class="vcard">
-                                    <img src="../static/images/clover.jpg" th:src="@{/images/clover.jpg}" alt="Image placeholder">
-                                </div>
-                                <div class="comment-body">
-                                    <h3>Nguyên</h3>
-                                    <div class="meta">15 tháng 3, 2023 at 11:21pm</div>
-                                    <p>Bài viết hay</p>
-                                    <p><a href="#" class="reply rounded">Reply</a></p>
-                                </div>
-                            </li>
-
+                            <div th:if="${not #lists.isEmpty(comments)}">
+                                <th:block th:each="comment:${comments}">
+                                    <li class="comment">
+                                        <div class="vcard">
+                                            <img src="../static/images/clover.jpg" th:src="@{/images/clover.jpg}" alt="Image placeholder">
+                                        </div>
+                                        <div class="comment-body">
+                                            <h3 th:text="${comment.userModel.getFullname}"></h3>
+                                            <div class="meta" th:text="${comment.comment.getCreatedDate}"></div>
+                                            <p th:text="${comment.comment.getContent}"></p>
+                                            <p><a href="#" class="reply rounded">Trả lời</a></p>
+                                        </div>
+                                    </li>
+                                </th:block>
+                            </div>
                         </ul>
                         <!-- END comment-list -->
 
                         <div class="comment-form pt-5">
-                            <h3 class="mb-2">Để lại bình luận</h3>
-                            <form class="p-4 form-inline bg-light">
-                                <div class="form-group mb-2">
-                                    <div class="row">
-                                        <div class="col-sm-2">
+                            <th:block th:if="${userSession}">
+                                <h3 class="mb-2">Để lại bình luận</h3>
+                                <form class="p-4 form-inline bg-light">
+                                    <div class="form-group mb-2">
+                                        <div class="row">
+                                            <div class="col-sm-2">
                         <span class="author mr-4">
                           <img src="../static/images/clover.jpg" th:src="@{/images/clover.jpg}" class="rounded-circle" alt="Image placeholder" width="50vh"
                                height="50vh">
                         </span>
-                                        </div>
-                                        <div class="col-sm-10">
+                                            </div>
+                                            <div class="col-sm-10">
                         <textarea type="text" class="form-control-range mr-5" id="comment"
                                   placeholder="Viết bình luận "></textarea>
+                                            </div>
                                         </div>
+                                        <button class="btn btn-primary btn-sm rounded" id="btnComment" style="margin-left: 12px;">Bình
+                                            luận</button>
                                     </div>
-                                    <button class="btn btn-primary btn-sm rounded" id="btnComment" style="margin-left: 12px;">Bình
-                                        luận</button>
-                                </div>
-                            </form>
+                                </form>
+                            </th:block>
+                            <th:block th:unless="${userSession}">
+                                <h3 class="mb-2">Đăng nhập để bình luận bài viết</h3>
+                                <button th:href="@{/login-page}" class="btn btn-success mb-2">Đăng nhập</button>
+                            </th:block>
+
                         </div>
                     </div>
                 </div>
@@ -127,6 +137,44 @@
     //     var obj = editor.getData();
     //     console.log(obj);
     // })
+</script>
+<!--Comment-->
+<script th:inline="javascript">
+    $('#btnComment').click(function (e){
+        e.preventDefault();
+        var comment = {};
+        comment["content"] = $('#comment').val();
+        comment['userId'] = [(${post.userId})];
+        comment["postId"] = [(${post.id})];
+        console.log(comment);
+        addNewComment(comment);
+    })
+    function addNewComment(data){
+        $.ajax({
+            url:'/api/v1/comment',
+            type:'POST',
+            data:JSON.stringify(data),
+            contentType:'application/json',
+            dataType:'json',
+            success:function (result){
+                console.log(result);
+                $('.comment-list').append(`<li class="comment">
+                  <div class="vcard">
+                    <img src="/images/clover.jpg" alt="Image placeholder">
+                  </div>
+                  <div class="comment-body">
+                    <h3>[(${userSession.fullname})]</h3>
+                    <div class="meta"></div>
+                    <p>${result.content}</p>
+                    <p><a href="#" class="reply rounded">Reply</a></p>
+                  </div>
+                </li>`);
+            },
+            error:function (error){
+                console.log(error);
+            }
+        });
+    }
 </script>
 <th:block th:insert="~{layout/logjava::script}"></th:block>
 </body>

@@ -137,7 +137,7 @@
       var data = {};
       data["title"]= $('#title').val();
       data["shortDescription"] = $('#shortDescription').val();
-      data["categoryName"] = $('#categoryCode').val();
+      data["categoryCode"] = $('#categoryCode').val();
       data['image'] = $('#result').val();
       data["content"] = editor.getData();
       data["userId"] = $('#userId').val();
@@ -171,6 +171,9 @@
       });
     }
   </script>
+
+<!--  Comment-->
+
   <th:block th:insert="~{layout/logjava::script}"></th:block>
 </body>
 

@@ -73,7 +73,7 @@ public class CategoryRepositoryImpl implements CategoryRepository {
         try {
             connection = MySQLUtil.getConnection();
             connection.setAutoCommit(false);
-            String sql = "select * from category where name = ?";
+            String sql = "select * from category where code = ?";
             statement = connection.prepareStatement(sql);
             statement.setString(1,name);
             resultSet = statement.executeQuery();

@@ -1,5 +1,7 @@
 package com.blog.api;
 
+import com.blog.model.Comment;
+import com.blog.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +19,9 @@ public class PostRestController {
     @Autowired
     private PostService postService;
 
+    @Autowired
+    private CommentService commentService;
+
     @PostMapping("/post")
     public ResponseEntity<?> insert(@RequestBody PostModel postModel){
         Boolean result = postService.insert(postModel);
@@ -24,6 +29,15 @@ public class PostRestController {
             return ResponseEntity.badRequest().build();
         }
         return ResponseEntity.ok().body(postModel);
+    }
+
+    @PostMapping("/comment")
+    public ResponseEntity<?> insertComment(@RequestBody Comment comment){
+        Boolean result = commentService.insert(comment);
+        if (!result){
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok().body(comment);
     }
 
 }

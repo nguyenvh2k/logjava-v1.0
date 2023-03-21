@@ -13,4 +13,6 @@ public class PostModel extends AbstractModel{
     private String categoryCode;
     private String categoryName;
     private Long userId;
+    private UserModel userModel = new UserModel();
+    private Comment comment = new Comment();
 }

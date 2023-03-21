@@ -43,21 +43,3 @@ function toast({ title = "", message = "", type = "info", duration = 3000 }) {
         main.appendChild(toast);
     }
 }
-function showSuccessToast() {
-    toast({
-        title: "Thông báo!",
-        message: "Bạn đã đăng ký thành công tài khoản tại Log Java hãy đăng nhập.",
-        type: "success",
-        duration: 5000
-    });
-}
-
-
-function showWarningToast() {
-    toast({
-        title: "Thông báo!",
-        message: "Tính đăng đang được phát triển.",
-        type: "warning",
-        duration: 5000
-    });
-}

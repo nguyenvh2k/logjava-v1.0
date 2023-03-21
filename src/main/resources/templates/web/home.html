@@ -25,12 +25,12 @@
                                         <img th:src="@{${post.image}}" alt="Image placeholder">
                                         <div class="blog-content-body">
                                             <div class="post-meta">
-                                                <span class="author mr-2"><img src="images/clover.jpg" alt="Nguyên"> Nguyên</span>&bullet;
+                                                <span class="author mr-2"><img class="mr-2" src="images/clover.jpg" alt="Nguyên" ><th:block th:text="${post.userModel.getFullname}"></th:block></span>&bullet;
                                                 <span class="mr-2" th:text="${post.createdDate}"></span> &bullet;
                                                 <span class="ml-2"><span class="fa fa-comments"></span> 3</span>
                                             </div>
                                             <h2 th:text="${post.title}">Khắc phục lỗi Hibernate Error accessing với Spring Boot </h2>
-                                            <span class="category" href="#" style="background:#80EA6E;color: #111111!important;">Spring</span>
+                                            <span class="category" href="#" style='background:#80EA6E;color: #111111!important;font-weight: 700;' th:text="${post.categoryName}"></span>
                                         </div>
                                     </a>
                                 </div>
