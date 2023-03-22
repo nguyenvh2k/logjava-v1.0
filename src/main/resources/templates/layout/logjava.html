@@ -22,6 +22,14 @@
     <script type="text/javascript" src="../static/jquery/jquery.twbsPagination.min.js"
             th:src="@{/jquery/jquery.twbsPagination.js}"></script>
 </head>
+<style>
+     .avatar {
+    vertical-align: middle;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+ }
+</style>
 <body>
 <header role="banner" th:fragment="header">
     <div class="container logo-wrap">
@@ -43,25 +51,17 @@
                         <a class="nav-link" th:href="@{/home}">Trang chủ</a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="dropdown06" data-toggle="dropdown"
+                        <a class="nav-link" href="#" id="dropdown06" data-toggle="dropdown"
                            aria-haspopup="true"
                            aria-expanded="false">Blog</a>
-                        <div class="dropdown-menu" aria-labelledby="dropdown05">
+                        <!-- <div class="dropdown-menu" aria-labelledby="dropdown05">
                             <a class="dropdown-item" href="#">Java</a>
                             <a class="dropdown-item" href="#">Spring</a>
                             <a class="dropdown-item" href="#">Hibernate</a>
                             <a class="dropdown-item" href="#">Tomcat</a>
                             <a class="dropdown-item" href="#">Docker</a>
                             <a class="dropdown-item" href="#">Khác</a>
-                        </div>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" onclick="showWarningToast();">Hỏi đáp</a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" onclick="showWarningToast();">Tâm sự ngắn</a>
+                        </div> -->
                     </li>
 
                     <li class="nav-item">
@@ -88,6 +88,12 @@
                                     <th:block th:text="${userSession.username}"></th:block>
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="dropdown05">
+                                    <div class="post-meta p-2">
+                                        <span class="">
+                                            <img class="mr-2" style="width: 30px;height: 30px;border-radius: 50%;display: inline-block;" th:src="@{${'/'+userSession.image}}">
+                                            <th:block th:text="${userSession.fullname}"></th:block>
+                                        </span>
+                                    </div>
                                     <a class="dropdown-item" href="#">Trang cá nhân</a>
                                     <a class="dropdown-item" th:href="@{/post}">Viết blog</a>
                                     <a class="dropdown-item" href="#">Bài viết của tôi</a>

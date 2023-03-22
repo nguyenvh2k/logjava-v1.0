@@ -7,4 +7,5 @@ public class Comment extends AbstractModel{
     private String content;
     private Long userId;
     private Long postId;
+    private UserModel userModel = new UserModel();
 }

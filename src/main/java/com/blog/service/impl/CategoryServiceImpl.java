@@ -1,8 +1,8 @@
 package com.blog.service.impl;
 
-import com.blog.model.CategoryModel;
 import com.blog.repository.CategoryRepository;
 import com.blog.service.CategoryService;
+import com.blog.model.CategoryModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -9,22 +9,17 @@ import java.time.format.DateTimeFormatter;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 
 @RestController
-@RequestMapping("/upload")
-@CrossOrigin(origins = "http://127.0.0.1:5500/")
+@RequestMapping("/api/v1")
 public class UploadImage {
     private static final Path CURRENT_FOLDER = Paths.get(System.getProperty("user.dir"));
 
-    @PostMapping("/image")
-    public ResponseEntity<?> upload(@RequestParam MultipartFile image ) throws IOException{
+    @PostMapping("/upload/image")
+    public ResponseEntity<?> upload(@RequestParam("image") MultipartFile image ) throws IOException{
         DateTimeFormatter timeStampPattern = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
         System.out.println(timeStampPattern.format(java.time.LocalDateTime.now()));
         Path staticPath = Paths.get("static");

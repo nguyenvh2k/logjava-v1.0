@@ -3,5 +3,7 @@ package com.blog.repository;
 import com.blog.model.Comment;
 
 public interface CommentRepository {
-    boolean insert(Comment comment);
+    Long insert(Comment comment);
+    Comment findById(Long id);
+    void delete(Long id);
 }

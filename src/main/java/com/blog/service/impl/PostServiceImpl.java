@@ -1,8 +1,8 @@
 package com.blog.service.impl;
 
+import com.blog.repository.CategoryRepository;
 import com.blog.model.CategoryModel;
 import com.blog.model.PostModel;
-import com.blog.repository.CategoryRepository;
 import com.blog.repository.PostRepository;
 import com.blog.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +47,13 @@ public class PostServiceImpl implements PostService {
     @Override
     public List<PostModel> findComment(Long id) {
         return postRepository.findComment(id);
+    }
+
+    @Override
+    public void update(PostModel postModel) {
+        CategoryModel category = categoryRepository.findByName(postModel.getCategoryCode());
+        postModel.setCategoryId(category.getId());
+        postRepository.update(postModel);
     }
 
 }

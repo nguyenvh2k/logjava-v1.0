@@ -3,5 +3,6 @@ package com.blog.service;
 import com.blog.model.Comment;
 
 public interface CommentService {
-    boolean insert(Comment comment);
+    Comment insert(Comment comment);
+    void delete(Long id);
 }

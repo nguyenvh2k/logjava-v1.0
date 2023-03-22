@@ -8,5 +8,4 @@ public interface CategoryRepository {
     List<CategoryModel> findAll();
     List<CategoryModel> findAllNav();
     CategoryModel findByName(String name);
-
 }

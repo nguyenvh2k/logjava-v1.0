@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Log Java - Blog</title>
+  <th:block th:insert="~{/layout/logjava::link}"></th:block>
+  <th:block th:insert="~{/layout/logjava::head/script}"></th:block>
+  <script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/classic/ckeditor.js"></script>
+</head>
+
+<body>
+  <div class="wrap">
+    <header th:replace="~{/layout/logjava::header}"></header>
+    <section class="site-section py-sm">
+      <div class="container">
+        <div class="row mb-4 mt-4">
+          <div class="col-md-6">
+            <h1>Chỉnh sửa bài viết</h1>
+          </div>
+        </div>
+        <div class="row blog-entries">
+          <div class="col-md-12 col-lg-8 main-content">
+              <div class="row">
+                <div class="col-md-12 form-group">
+                  <label for="title">Tiêu đề bài viết</label>
+                  <input type="text" id="title" th:value="${post.title}" class="form-control ">
+                  <input type="hidden" id="userId" th:value="${userSession.id}">
+                  <input type="hidden" id="postId" th:value="${post.id}">
+                </div>
+                <div class="col-md-12 form-group">
+                  <label for="shortDescription">Miêu tả ngắn</label>
+                  <input type="text" th:value="${post.shortDescription}" id="shortDescription" class="form-control ">
+                </div>
+                <div class="col-md-12 form-group">
+                  <option value="">Chọn loại bài viết</option>
+                  <select class="form-control" id="categoryCode" name="categoryCode">
+                    <option th:each="category : ${categoryPost}" th:value="${category.code}" th:text="${category.name}"
+                            th:selected="${post.categoryName==category.name}"></option>
+                  </select>
+                </div>
+                <div class="col-md-12 form-group">
+                  <label>Ảnh bài viết</label>
+                  <form method="POST" enctype="multipart/form-data" id="fileUploadForm">
+                    <input type="file" name="files" id="fImage" accept=".jpg, .png" /><br />
+                    <input type="submit" class="btn btn-success mt-2" value="Upload" id="submitButton"/>
+                    <input type="hidden" id="result"/>
+                  </form>
+                  <h3>Xem trước:</h3>
+                  <div style="border:1px solid #ccc;padding: 5px;">
+                    <img id="pic1" th:src="@{${'/'+post.image}}" height="100%" width="100%">
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12 form-group">
+                  <label for="editor">Nội dung bài viết</label>
+                  <textarea name="message" id="editor" class="form-control " cols="20" rows="40" th:utext="${post.content}"> </textarea>
+                  <script>
+                    let editor;
+                    ClassicEditor
+                            .create( document.querySelector( '#editor' ) )
+                            .then( newEditor => {
+                              editor = newEditor;
+                            } )
+                            .catch( error => {
+                              console.error( error );
+                            } );
+                  </script>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 form-group">
+                  <a href="#" type="submit" id="btnSubmit" class="btn btn-primary mb-3">Cập nhật bài viết</a>
+                </div>
+              </div>
+          </div>
+
+          <!--Navbar -->
+          <div class="col-md-12 col-lg-4 sidebar">
+            <div th:replace="~{/layout/logjava::search}"></div>
+            <div th:replace="~{/layout/logjava::avatar}"></div>
+            <div th:replace="~{/layout/logjava::popular-post}"></div>
+            <div th:replace="~{/layout/logjava::categories}"></div>
+            <div th:replace="~{/layout/logjava::tag}"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <footer th:replace="~{layout/logjava::footer}"></footer>
+  </div>
+  <div id="toast"></div>
+  <script>
+    $(document).ready(function() {
+      $("#submitButton").click(function(event) {
+        // Stop default form Submit.
+        event.preventDefault();
+        ajaxSubmitForm();
+      });
+    });
+
+    function ajaxSubmitForm() {
+      // Get form
+      var form = $('#fileUploadForm')[0];
+      var data = new FormData(form);
+
+      $("#submitButton").prop("disabled", true);
+
+      $.ajax({
+        type: "POST",
+        enctype: 'multipart/form-data',
+        url: "/rest/uploadMultiFiles",
+        data: data,
+        // prevent jQuery from automatically transforming the data into a query string
+        processData: false,
+        contentType: false,
+        cache: false,
+        timeout: 1000000,
+        success: function(data, textStatus, jqXHR) {
+          console.log(data);
+          $("#result").val(data);
+          $("#pic1").attr("src", data);
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+          console.log("ERROR : ", jqXHR.responseText);
+        }
+      });
+    }
+  </script>
+
+  <script>
+    $('#btnSubmit').click(function (e){
+      e.preventDefault();
+      var data = {};
+      data["id"]=$('#postId').val();
+      data["title"]= $('#title').val();
+      data["shortDescription"] = $('#shortDescription').val();
+      data["categoryCode"] = $('#categoryCode').val();
+      data['image'] = $('#result').val();
+      data["content"] = editor.getData();
+      data["userId"] = $('#userId').val();
+      console.log(data);
+      updatePost(data);
+    });
+    function updatePost(data){
+      $.ajax({
+        url:'/api/v1/post',
+        type:'PUT',
+        data:JSON.stringify(data),
+        contentType:'application/json',
+        dataType:'json',
+        success:function (result){
+          showSuccessToast();
+          setTimeout(function(){
+            window.location.href = "/home";
+          },3000);
+        },
+        error:function (error){
+          console.log(error);
+        }
+      });
+    }
+    function showSuccessToast() {
+      toast({
+        title: "Thông báo!",
+        message: "Bạn đã cập nhật bài viết thành công hệ thống sẽ chuyển về trang chủ trong vài giây !",
+        type: "success",
+        duration: 5000
+      });
+    }
+  </script>
+
+<!--  Comment-->
+
+  <th:block th:insert="~{layout/logjava::script}"></th:block>
+</body>
+
+</html>

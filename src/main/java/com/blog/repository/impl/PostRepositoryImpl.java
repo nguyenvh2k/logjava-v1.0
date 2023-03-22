@@ -1,10 +1,10 @@
 package com.blog.repository.impl;
 
+import com.blog.utils.MySQLUtil;
 import com.blog.model.Comment;
 import com.blog.model.PostModel;
 import com.blog.model.UserModel;
 import com.blog.repository.PostRepository;
-import com.blog.utils.MySQLUtil;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
@@ -48,6 +48,7 @@ public class PostRepositoryImpl implements PostRepository {
                 UserModel userModel = new UserModel();
                 userModel.setFullname(resultSet.getString("fullname"));
                 userModel.setUsername(resultSet.getString("username"));
+                userModel.setImage(resultSet.getString("avatar"));
                 postModel.setUserModel(userModel);
                 posts.add(postModel);
             }
@@ -82,6 +83,7 @@ public class PostRepositoryImpl implements PostRepository {
                 postModel.setId(resultSet.getLong("id"));
                 postModel.setTitle(resultSet.getString("title"));
                 postModel.setThumbnail(resultSet.getString("thumbnail"));
+                postModel.setShortDescription(resultSet.getString("short_description"));
                 postModel.setImage(resultSet.getString("image"));
                 postModel.setContent(resultSet.getString("content"));
                 postModel.setCategoryName(resultSet.getString("name"));
@@ -90,6 +92,7 @@ public class PostRepositoryImpl implements PostRepository {
                 UserModel userModel = new UserModel();
                 userModel.setFullname(resultSet.getString("fullname"));
                 userModel.setUsername(resultSet.getString("username"));
+                userModel.setImage(resultSet.getString("avatar"));
                 postModel.setUserModel(userModel);
             }
             System.out.println("Lay danh sach post thanh cong !");
@@ -180,7 +183,7 @@ public class PostRepositoryImpl implements PostRepository {
             connection = MySQLUtil.getConnection();
             connection.setAutoCommit(false);
             String sql = "select\n" +
-                    "\tc.content ,u.username ,u.fullname \n,c.created_date  " +
+                    "\tc.content ,u.username ,u.fullname \n,c.created_date ,u.avatar " +
                     "from\n" +
                     "\tposts p\n" +
                     "left join comment c on\n" +
@@ -200,6 +203,7 @@ public class PostRepositoryImpl implements PostRepository {
                 UserModel userModel = new UserModel();
                 userModel.setUsername(resultSet.getString("username"));
                 userModel.setFullname(resultSet.getString("fullname"));
+                userModel.setImage(resultSet.getString("avatar"));
                 postModel.setComment(comment);
                 postModel.setUserModel(userModel);
                 commentList.add(postModel);
@@ -219,5 +223,45 @@ public class PostRepositoryImpl implements PostRepository {
         return commentList;
     }
 
-    
+    @Override
+    public void update(PostModel postModel) {
+        Connection connection = null;
+        PreparedStatement statement = null;
+        try {
+            connection =MySQLUtil.getConnection();
+            connection.setAutoCommit(false);
+            String sql = "update posts set title = ?, short_description = ?,content=?,category_id=?,image=?,created_date=? where id=?";
+            statement = connection.prepareStatement(sql);
+            statement.setString(1,postModel.getTitle());
+            statement.setString(2,postModel.getShortDescription());
+            statement.setString(3,postModel.getContent());
+            statement.setLong(4,postModel.getCategoryId());
+            statement.setString(5,postModel.getImage());
+            statement.setTimestamp(6,new Timestamp(System.currentTimeMillis()));
+            statement.setLong(7,postModel.getId());
+            statement.executeUpdate();
+            connection.commit();
+            System.out.println("Update success!");
+        }catch (SQLException e){
+            System.out.println("Xay ra Exception khi update post:");
+            System.out.println(e.getMessage());
+            try {
+                connection.rollback();
+                System.out.println("Rollback success !");
+            } catch (SQLException ex) {
+                System.out.println("Rollback failed !");
+                System.out.println(e.getMessage());
+            }
+        }finally {
+            try {
+                connection.close();
+                statement.close();
+            } catch (SQLException e) {
+                System.out.println("Loi dong connection");
+                System.out.println(e.getMessage());
+            }
+        }
+    }
+
+
 }

@@ -1,8 +1,8 @@
 package com.blog.repository.impl;
 
-import com.blog.model.UserModel;
 import com.blog.repository.UserRepository;
 import com.blog.utils.MySQLUtil;
+import com.blog.model.UserModel;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
@@ -30,7 +30,9 @@ public class UserRepositoryImpl implements UserRepository {
                 user.setId(resultSet.getLong("id"));
                 user.setUsername(resultSet.getString("username"));
                 user.setPassword(resultSet.getString("password"));
+                user.setFullname(resultSet.getString("fullname"));
                 user.setEmail(resultSet.getString("email"));
+                user.setImage(resultSet.getString("avatar"));
             }
             return user;
         }catch (SQLException e){
@@ -55,7 +57,7 @@ public class UserRepositoryImpl implements UserRepository {
         try {
             connection = MySQLUtil.getConnection();
             connection.setAutoCommit(false);
-            String sql = "insert into users(username,password,email,fullname,roleid,status) values(?,?,?,?,?,?)";
+            String sql = "insert into users(username,password,email,fullname,roleid,status,avatar) values(?,?,?,?,?,?,?)";
             statement = connection.prepareStatement(sql);
             statement.setString(1,userModel.getUsername());
             statement.setString(2,userModel.getPassword());
@@ -63,6 +65,7 @@ public class UserRepositoryImpl implements UserRepository {
             statement.setString(4,userModel.getFullname());
             statement.setInt(5,userModel.getRole());
             statement.setInt(6, 1);
+            statement.setString(7,userModel.getImage());
             statement.executeUpdate();
             connection.commit();
             System.out.println("Insert success");

@@ -44,7 +44,7 @@ public class PostController {
         UserModel user = (UserModel) session.getAttribute("userSession");
         model.addAttribute("userSession",user);
         if (user==null){
-            return "/error/error-404";
+            return "redirect:/login-page";
         }
         List<CategoryModel> categories =categoryService.findAll();
         model.addAttribute("categoryPost",categories);
@@ -70,5 +70,20 @@ public class PostController {
         List<PostModel> commentList = postService.findComment(id);
         model.addAttribute("comments",commentList);
         return "/web/post";
+    }
+
+    @GetMapping("/edit-post/{id}")
+    public String editBlog(@PathVariable("id")Long id,Model model){
+        UserModel user = (UserModel) session.getAttribute("userSession");
+        model.addAttribute("userSession",user);
+        PostModel post = postService.findById(id);
+        model.addAttribute("post",post);
+        List<CategoryModel> categories =categoryService.findAll();
+        model.addAttribute("categoryPost",categories);
+        List<CategoryModel> categoryModels = categoryService.findAllNav();
+        model.addAttribute("categories",categoryModels);
+        List<PostModel> postPopular = postService.findByPopular();
+        model.addAttribute("popular",postPopular);
+        return "/web/edit-post";
     }
 }
