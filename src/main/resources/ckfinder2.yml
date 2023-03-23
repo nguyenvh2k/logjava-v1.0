@@ -11,7 +11,7 @@ csrfProtection: true
 backends:
   - name: 'default'
     adapter: 'local'
-    baseUrl: 'http://localhost:8080/userfiles'
+    baseUrl: '/userfiles'
     root: '{user.dir}/userfiles'
     disallowUnsafeCharacters: true
     forceAscii: false
