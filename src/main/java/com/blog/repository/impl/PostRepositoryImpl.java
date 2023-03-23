@@ -206,7 +206,7 @@ public class PostRepositoryImpl implements PostRepository {
                     "from\n" +
                     "\tposts p\n" +
                     "left join comment c on\n" +
-                    "\tc.new_id = p.id\n" +
+                    "\tc.post_id = p.id\n" +
                     "left join users u on\n" +
                     "\tu.id = c.user_id\n" +
                     "join category c2 on\n" +

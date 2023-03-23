@@ -56,14 +56,14 @@ public class CategoryRepositoryImpl implements CategoryRepository {
         try {
             connection = MySQLUtil.getConnection();
             connection.setAutoCommit(false);
-            String sql = "select count(*) as 'count_post',c.name,c.code  from blog.category c join blog.posts p on p.category_id = c.id group by c.name ,c.code ;";
+            String sql = "select count(*),c.name,c.code  from category c join posts p on p.category_id = c.id group by c.name ,c.code ;";
             statement = connection.prepareStatement(sql);
             resultSet = statement.executeQuery();
             while (resultSet.next()){
                 CategoryModel categoryModel = new CategoryModel();
                 categoryModel.setCode(resultSet.getString("code"));
                 categoryModel.setName(resultSet.getString("name"));
-                categoryModel.setCount(resultSet.getInt("count_post"));
+                categoryModel.setCount(resultSet.getInt("count"));
                 categoryModelList.add(categoryModel);
             }
         }catch (SQLException e){

@@ -82,10 +82,11 @@ public class UserRepositoryImpl implements UserRepository {
             statement.setString(7,userModel.getImage());
             statement.executeUpdate();
             connection.commit();
-            logger.info("Insert success");
+            logger.info("Insert success !");
             return true;
         }catch (SQLException e){
-            logger.error("Xay ra Exception o UserRepository:",e.getMessage());
+            logger.error("Insert failed !");
+            logger.error("Exception: {}",e.getMessage());
             try {
                 connection.rollback();
                 logger.info("Rollback success!");

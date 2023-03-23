@@ -17,10 +17,10 @@ public class MySQLUtil {
     public static Connection getConnection(){
         try {
 //            logger.info("Connecting....");
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            String url = "jdbc:mysql://localhost:3306/blog";
-            String user ="root";
-            String password ="123456";
+            Class.forName("org.postgresql.Driver");
+            String url = "jdbc:postgresql://db.uoddykgmypogipcizabv.supabase.co:5432/postgres";
+            String user ="postgres";
+            String password ="iLOVEYOU124@#$%^&*()";
             Connection connection = DriverManager.getConnection(url,user,password);
 //            logger.info("Connect success !");
             return connection;

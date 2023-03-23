@@ -38,6 +38,9 @@ public class PostServiceImpl implements PostService {
     @Override
     public Boolean insert(PostModel postModel) {
         CategoryModel category = categoryRepository.findByName(postModel.getCategoryCode());
+        if(postModel.getImage().equals("")){
+            postModel.setImage("images/20230323120450.png");
+        }
         postModel.setCategoryId(category.getId());
         postModel.setCreatedDate(new Timestamp(System.currentTimeMillis()));
         postModel.setCreatedBy("ADMIN");
