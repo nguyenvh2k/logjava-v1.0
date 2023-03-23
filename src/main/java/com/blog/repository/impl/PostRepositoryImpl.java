@@ -296,7 +296,7 @@ public class PostRepositoryImpl implements PostRepository {
         try {
             connection = MySQLUtil.getConnection();
             connection.setAutoCommit(false);
-            String sqlComment = "delete from comment where new_id=?";
+            String sqlComment = "delete from comment where post_id=?";
             statement1 = connection.prepareStatement(sqlComment);
             statement1.setLong(1,id);
             statement1.executeUpdate();

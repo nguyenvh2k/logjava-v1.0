@@ -24,7 +24,7 @@ public class CommentRepositoryImpl implements CommentRepository {
         try {
             connection = MySQLUtil.getConnection();
             connection.setAutoCommit(false);
-            String sql = "insert  into comment(content,user_id,new_id,created_date) values (?,?,?,?)";
+            String sql = "insert  into comment(content,user_id,post_id,created_date) values (?,?,?,?)";
             statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             statement.setString(1,comment.getContent());
             statement.setLong(2,comment.getUserId());
