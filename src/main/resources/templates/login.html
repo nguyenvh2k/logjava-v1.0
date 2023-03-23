@@ -149,10 +149,10 @@
         contentType: 'application/json',
         dataType: 'json',
         success: function (result) {
+          showSuccessToast();
           setTimeout(function () {
-            showSuccessToast();
             window.location.href = "/home";
-          }, 1000);
+          },500);
         },
         error: function (error) {
           showErrorToast();
