@@ -59,6 +59,7 @@ public class PostController {
         UserModel user = (UserModel) session.getAttribute("userSession");
         model.addAttribute("userSession",user);
         if (user==null){
+            session.setAttribute("message2", "Login to write blog");
             return "redirect:/login-page";
         }
         List<CategoryModel> categories =categoryService.findAll();

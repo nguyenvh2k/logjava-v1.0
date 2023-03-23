@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,6 +22,7 @@ import java.nio.file.Paths;
 import java.time.format.DateTimeFormatter;
 
 @RestController
+@RequestMapping("/api/v1")
 public class UploadFileRestController {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private static final Path CURRENT_FOLDER = Paths.get(System.getProperty("user.dir"));
@@ -31,7 +33,7 @@ public class UploadFileRestController {
      * @param form
      * @return String (Đường dẫn file)
      */
-    @PostMapping("/rest/uploadMultiFiles")
+    @PostMapping("/upload/image")
     public ResponseEntity<?> multiUploadFileModel(@ModelAttribute UploadForm form) {
 
         String result = null;

@@ -2,6 +2,9 @@ package com.blog.api;
 
 import com.blog.model.UserModel;
 import com.blog.service.UserService;
+
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +29,17 @@ public class UserRestController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok().body(result);
+    }
+
+    @PostMapping("/user/login")
+    public ResponseEntity<?> login(@RequestBody UserModel userModel,HttpSession session){
+        UserModel user = userService.checkLogin(userModel);
+        if (user==null){
+            session.setAttribute("message","Tài khoản hoặc mật khẩu không đúng!");
+            return ResponseEntity.notFound().build();
+        }
+        session.setAttribute("userSession",user);
+        return ResponseEntity.ok().body(user);
     }
 
 }

@@ -14,13 +14,17 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Repository
 public class PostRepositoryImpl implements PostRepository {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm");
 
 
     /**
@@ -53,6 +57,8 @@ public class PostRepositoryImpl implements PostRepository {
                 userModel.setUsername(resultSet.getString("username"));
                 userModel.setImage(resultSet.getString("avatar"));
                 postModel.setUserModel(userModel);
+                postModel.setDate(dateFormat.format(new Date(postModel.getCreatedDate().getTime())));
+                System.out.println(postModel.getDate());
                 posts.add(postModel);
             }
             logger.info("Get the list of successful posts!");
@@ -101,6 +107,7 @@ public class PostRepositoryImpl implements PostRepository {
                 userModel.setFullname(resultSet.getString("fullname"));
                 userModel.setUsername(resultSet.getString("username"));
                 userModel.setImage(resultSet.getString("avatar"));
+                postModel.setDate(dateFormat.format(new Date(postModel.getCreatedDate().getTime())));
                 postModel.setUserModel(userModel);
             }
             logger.info("Get list of posts by id success !");
@@ -135,6 +142,7 @@ public class PostRepositoryImpl implements PostRepository {
                 postModel.setImage(resultSet.getString("image"));
                 postModel.setContent(resultSet.getString("content"));
                 postModel.setCreatedDate(resultSet.getTimestamp("created_date"));
+                postModel.setDate(dateFormat.format(new Date(postModel.getCreatedDate().getTime())));
                 posts.add(postModel);
             }
             logger.info("Get the list of highly viewed posts successfully !");

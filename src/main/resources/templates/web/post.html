@@ -6,15 +6,6 @@
     <title>Log Java - Bài viết</title>
     <th:block th:insert="~{/layout/logjava::link}"></th:block>
     <th:block th:insert="~{/layout/logjava::head/script}"></th:block>
-    <style>
-
-    </style>
-    <script>
-        $(window).bind("load", function () {
-            jQuery("#status").fadeOut(2000);
-            jQuery("#loader").fadeOut(2000);
-        });
-    </script>
 </head>
 
 <body>
@@ -33,18 +24,21 @@
                         <h1 class="mb-4" th:text="${post.title}"></h1>
                         <input type="hidden" th:value="${post.id}" id="postId">
                         <div class="post-meta">
-                            <span class="author mr-2"><img style="height: 30px;" th:src="@{${'/'+post.userModel.getImage}}" alt="Colorlib"
-                                    class="mr-2" th:text="${post.userModel.getFullname}"></span>&bullet;
-                            <span class="mr-2" th:text="${post.createdDate}"></span> &bullet;
+                            <span class="author mr-2"><img style="height: 30px;"
+                                    th:src="@{${'/'+post.userModel.getImage}}" alt="Colorlib" class="mr-2"
+                                    th:text="${post.userModel.getFullname}"></span>&bullet;
+                            <span class="mr-2" th:text="${post.date}"></span> &bullet;
                             <th:block th:if="${userSession}">
                                 <th:block th:if="${post.userId==userSession.id}">
-                                    <a th:href="@{/edit-post/{id}(id=${post.id})}" class="category" style="background-color:#5BC0DE;">Cập nhật</a>
-                                    <a href="#" id="btnDeletePost" class="category" style="background-color:#C82333;">Xoá</a>
+                                    <a th:href="@{/edit-post/{id}(id=${post.id})}" class="category"
+                                        style="background-color:#5BC0DE;">Cập nhật</a>
+                                    <a href="#" id="btnDeletePost" class="category"
+                                        style="background-color:#C82333;">Xoá</a>
                                 </th:block>
                             </th:block>
-                            
+
                         </div>
-                        <span class="category mb-3"  style="background:#80EA6E;color: #111111!important;">
+                        <span class="category mb-3" style="background:#80EA6E;color: #111111!important;">
                             <th:block th:text="${post.categoryName}"></th:block>
                         </span>
                         <div class="post-content-body">
@@ -53,22 +47,23 @@
                         <div class="pt-5">
                             <h3 class="mb-4">Bình luận</h3>
                             <ul class="comment-list">
-                                    <th:block th:each="comment:${comments}">
-                                        <li class="comment" th:if="${comment.comment.getContent!=null}">
-                                            <div class="vcard">
-                                                <img th:src="@{${'/'+comment.userModel.getImage}}"
-                                                    alt="Image placeholder">
-                                            </div>
-                                            <div class="comment-body">
-                                                <h3 th:text="${comment.userModel.getFullname}"></h3>
-                                                <div class="meta" th:text="${comment.comment.getCreatedDate}"></div>
-                                                <p th:text="${comment.comment.getContent}"></p>
-                                                <th:block th:if="${userSession}">
-                                                    <p th:if="${comment.userModel.getFullname==userSession.fullname}"><a href="#" id="btnDeleteComment" class="category" style="background: #C82333 !important;">Xoá</a></p>
-                                                </th:block>
-                                            </div>
-                                        </li>
-                                    </th:block>
+                                <th:block th:each="comment:${comments}">
+                                    <li class="comment" th:if="${comment.comment.getContent!=null}">
+                                        <div class="vcard">
+                                            <img th:src="@{${'/'+comment.userModel.getImage}}" alt="Image placeholder">
+                                        </div>
+                                        <div class="comment-body">
+                                            <h3 th:text="${comment.userModel.getFullname}"></h3>
+                                            <div class="meta" th:text="${comment.comment.getCreatedDate}"></div>
+                                            <p th:text="${comment.comment.getContent}"></p>
+                                            <th:block th:if="${userSession}">
+                                                <p th:if="${comment.userModel.getFullname==userSession.fullname}"><a
+                                                        href="#" id="btnDeleteComment" class="category"
+                                                        style="background: #C82333 !important;">Xoá</a></p>
+                                            </th:block>
+                                        </div>
+                                    </li>
+                                </th:block>
                             </ul>
                             <div class="comment-form pt-5 mt-2">
                                 <th:block th:if="${userSession}">
@@ -139,12 +134,14 @@
             e.preventDefault();
             var comment = {};
             comment["content"] = $('#comment').val();
-            comment['userId'] = [(${ userSession.id })];
-        comment["postId"] = [(${ post.id })];
-        console.log(comment);
-        addNewComment(comment);
-        $('#comment').val(null);
-    });
+            comment['userId'] = [(${userSession.id})];
+            comment["postId"] = [(${post.id})];
+            var cmt = comment["content"];
+            console.log(comment);
+            addNewComment(comment);
+            $('#comment').val(null);
+        });
+        
         function addNewComment(data) {
             $.ajax({
                 url: '/api/v1/comment',
@@ -172,19 +169,17 @@
             });
         }
 
-    </script>
-    <!--Post-->
-    <script>
         var modal = $('.modal');
-        $('#btnDeletePost').click(function (e){
+        $('#btnDeletePost').click(function (e) {
             e.preventDefault();
             var data = {};
-            data["id"]= $('#postId').val();
+            data["id"] = $('#postId').val();
             modal.show();
-            $('#delete').click(function (){
+            $('#delete').click(function () {
                 deletePost(data);
+                modal.hide();
             });
-            $('#noDelete').click(function (){
+            $('#noDelete').click(function () {
                 modal.hide();
             });
             $(window).on('click', function (e) {
@@ -193,33 +188,37 @@
                 }
             });
         })
-        function deletePost(data){
+
+        function deletePost(data) {
             $.ajax({
-                url:"/api/v1/post",
-                type: "DELETE",
-                data:JSON.stringify(data),
-                contentType: "application/json",
-                dataType: "json",
-                success:function (result){
+                url: '/api/v1/post',
+                type: 'DELETE',
+                data: JSON.stringify(data),
+                contentType: 'application/json',
+                // dataType: 'json',
+                success: function (result) {
                     showSuccessToast();
                     setTimeout(function () {
                         window.location.href = "/home";
-                    }, 5000);
+                    }, 3000);
                 },
-                error:function (error){
+                error: function (error) {
                     console.log(error);
                 }
             });
         }
+
         function showSuccessToast() {
             toast({
                 title: "Thông báo!",
-                message: "Bạn đã đăng bài viết thành công hệ thống sẽ chuyển về trang chủ trong vài giây !",
-                type: "success",
+                message: "Bạn đã xoá bài viết thành công hệ thống sẽ chuyển về trang chủ trong vài giây !",
+                type: "warning",
                 duration: 5000
             });
         }
     </script>
+    <!--Post-->
+       
     <th:block th:insert="~{layout/logjava::script}"></th:block>
 </body>
 

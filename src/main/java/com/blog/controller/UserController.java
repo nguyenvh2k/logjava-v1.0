@@ -1,12 +1,19 @@
 package com.blog.controller;
 
+import com.blog.service.CategoryService;
+import com.blog.service.PostService;
 import com.blog.service.UserService;
+import com.blog.model.CategoryModel;
+import com.blog.model.PostModel;
 import com.blog.model.UserModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 
 @Controller
@@ -14,6 +21,12 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private PostService postService;
+
+    @Autowired
+    private CategoryService categoryService;
 
     @Autowired
     private HttpSession session;
@@ -44,10 +57,30 @@ public class UserController {
      */
     @GetMapping("/login-page")
     public String login(Model model){
+        model.addAttribute("warning", session.getAttribute("message2"));
         model.addAttribute("user",new UserModel());
         model.addAttribute("message",session.getAttribute("message"));
         return "login";
     }
+
+
+        /**
+     * Trang đăng nhập
+     *
+     * @param model
+     * @return String
+     */
+    @GetMapping("/profile")
+    public String profile(Model model){
+        UserModel user = (UserModel) session.getAttribute("userSession");
+        model.addAttribute("userSession", user);
+        List<CategoryModel> categoryModels = categoryService.findAllNav();
+        List<PostModel> postPopular = postService.findByPopular();
+        model.addAttribute("popular",postPopular);
+        model.addAttribute("categories",categoryModels);
+        return "/web/profile";
+    }
+
 
     /**
      * Trang đăng ký

@@ -79,7 +79,7 @@ public class CommentRepositoryImpl implements CommentRepository {
             if (resultSet.next()){
                 comment.setUserId(resultSet.getLong("user_id"));
                 comment.setCreatedDate(resultSet.getTimestamp("created_date"));
-                comment.setPostId(resultSet.getLong("new_id"));
+                comment.setPostId(resultSet.getLong("post_id"));
                 comment.setContent(resultSet.getString("content"));
                 comment.setId(resultSet.getLong("id"));
 

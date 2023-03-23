@@ -111,40 +111,80 @@
 <body>
   <div id='status'></div>
   <div id='loader'></div>
-<form class="form-signin text-center" method="post" th:action="@{/check-login}" th:object="${user}">
+<form class="form-signin text-center">
   <img class="mb-4 text-center" src="./images/icons8-oak-leaf-96.png" alt="" width="72" height="72">
   <h1 class="h3 mb-3 font-weight-normal text-center" style="color: #C2CE34;">Log Java</h1>
   <p>Chia sẻ và học hỏi kiến thức một cách dễ dàng hơn.</p>
   <label for="username" class="sr-only">Tài khoản</label>
-  <input type="text" id="username" class="form-control mb-2" placeholder="Tài khoản" required th:field="*{username}">
+  <input type="text" id="username" class="form-control mb-2" placeholder="Tài khoản" required>
   <label for="password" class="sr-only">Password</label>
-  <input type="password" id="password" class="form-control" placeholder="Mật khẩu" required th:field="*{password}">
+  <input type="password" id="password" class="form-control" placeholder="Mật khẩu" required>
   <div class="checkbox mb-3">
     <label>
       <input type="checkbox" value="remember-me"> Ghi nhớ tài khoản
     </label>
   </div>
-  <button class="btn btn-lg btn-success btn-block mb-2" type="submit">Đăng nhập</button>
+  <button class="btn btn-lg btn-success btn-block mb-2" type="submit" id="btnSubmit">Đăng nhập</button>
   <a class="btn" th:href="@{/dang-ky}" style="color:#52BFA1;">Đăng ký tài khoản mới</a>
   <a class="btn" th:href="@{/home}" style="color:#52BFA1;">Quay về trang chủ</a>
   <p class="mt-5 mb-3 text-muted">Log Java &copy; 2023</p>
 </form>
-<th:block th:if="${message}">
-  <div id="toast"></div>
-</th:block>
+<div id="toast"></div>
+
 <script th:src="@{/js/toast.js}"></script>
 <script type="text/javascript" th:inline="javascript">
-  if ($('#toast').val()!=undefined){
-    showErrorToast();
-  }
+  
+  $('#btnSubmit').click(function(e){
+    e.preventDefault();
+    var data = {};
+    data["username"] = $('#username').val();
+    data["password"] = $('#password').val();
+    login(data);
+  });
+  function login(data) {
+      $.ajax({
+        url: '/api/v1/user/login',
+        type: 'POST',
+        data: JSON.stringify(data),
+        contentType: 'application/json',
+        dataType: 'json',
+        success: function (result) {
+          setTimeout(function () {
+            showSuccessToast();
+            window.location.href = "/home";
+          }, 1000);
+        },
+        error: function (error) {
+          showErrorToast();
+          $('#username').val(null);
+          $('#password').val(null);
+        }
+      });
+    }
   function showErrorToast() {
     toast({
-        title: "Đăng nhập thất bại!",
+        title: "Đăng nhập thất bại !",
         message: "Tài khoản hoặc mật khẩu không đúng",
         type: "error",
         duration: 5000
     });
 }
+function showWarnigToast() {
+    toast({
+        title: "Thông báo",
+        message: "Bạn phải đăng nhập để viết blog !",
+        type: "warning",
+        duration: 5000
+    });
+}
+function showSuccessToast() {
+      toast({
+        title: "Đăng nhập thành công !",
+        message: "Hệ thống sẽ chuyển về trang chủ trong vài giây !",
+        type: "success",
+        duration: 5000
+      });
+    }
 </script>
 </body>
 </html>

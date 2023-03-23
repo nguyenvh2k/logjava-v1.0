@@ -43,7 +43,7 @@ public class PostRestController {
     @PutMapping ("/post")
     public ResponseEntity<?> updatePost(@RequestBody PostModel postModel){
         postService.update(postModel);
-        return ResponseEntity.ok().body(postModel);
+        return ResponseEntity.ok().build();
     }
 
 
@@ -77,7 +77,7 @@ public class PostRestController {
     @DeleteMapping("/post")
     public ResponseEntity<?> deletePost(@RequestBody PostModel postModel){
         postService.delete(postModel.getId());
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(postModel);
     }
 
 }

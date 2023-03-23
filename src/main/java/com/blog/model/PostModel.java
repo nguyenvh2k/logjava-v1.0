@@ -15,4 +15,5 @@ public class PostModel extends AbstractModel{
     private Long userId;
     private UserModel userModel = new UserModel();
     private Comment comment = new Comment();
+    private String date;
 }

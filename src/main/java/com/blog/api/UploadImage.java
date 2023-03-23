@@ -4,11 +4,9 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.time.format.DateTimeFormatter;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,7 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class UploadImage {
     private static final Path CURRENT_FOLDER = Paths.get(System.getProperty("user.dir"));
 
-    @PostMapping("/upload/image")
+    @PostMapping("/upload/file")
     public ResponseEntity<?> upload(@RequestParam("image") MultipartFile image ) throws IOException{
         DateTimeFormatter timeStampPattern = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
         System.out.println(timeStampPattern.format(java.time.LocalDateTime.now()));
