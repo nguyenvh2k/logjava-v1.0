@@ -19,6 +19,12 @@ public class PostRestController {
     @Autowired
     private CommentService commentService;
 
+    /**
+     * Thêm mới bài viết
+     *
+     * @param postModel
+     * @return ResponseEntity<?>
+     */
     @PostMapping("/post")
     public ResponseEntity<?> insertPost(@RequestBody PostModel postModel){
         Boolean result = postService.insert(postModel);
@@ -28,12 +34,25 @@ public class PostRestController {
         return ResponseEntity.ok().body(postModel);
     }
 
+    /**
+     * Cập nhật bài viết
+     *
+     * @param postModel
+     * @return ResponseEntity<?>
+     */
     @PutMapping ("/post")
     public ResponseEntity<?> updatePost(@RequestBody PostModel postModel){
         postService.update(postModel);
         return ResponseEntity.ok().body(postModel);
     }
 
+
+    /**
+     * Thêm mới bình luận bài viết
+     *
+     * @param
+     * @return ResponseEntity<?>
+     */
     @PostMapping("/comment")
     public ResponseEntity<?> insertComment(@RequestBody Comment comment){
         Comment result = commentService.insert(comment);
@@ -43,9 +62,21 @@ public class PostRestController {
         return ResponseEntity.ok().body(result);
     }
 
+    /**
+     * Xoá bình luận bài viết
+     *
+     * @param comment
+     * @return
+     */
     @DeleteMapping("/comment")
     public ResponseEntity<?> deleteComment(@RequestBody Comment comment){
         commentService.delete(comment.getId());
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/post")
+    public ResponseEntity<?> deletePost(@RequestBody PostModel postModel){
+        postService.delete(postModel.getId());
         return ResponseEntity.ok().build();
     }
 

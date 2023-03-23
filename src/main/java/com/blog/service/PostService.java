@@ -11,4 +11,5 @@ public interface PostService {
     Boolean insert(PostModel postModel);
     List<PostModel> findComment(Long id);
     void update(PostModel postModel);
+    void delete(Long id);
 }

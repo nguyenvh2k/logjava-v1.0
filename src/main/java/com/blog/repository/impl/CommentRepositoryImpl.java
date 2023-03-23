@@ -9,7 +9,12 @@ import java.sql.*;
 
 @Repository
 public class CommentRepositoryImpl implements CommentRepository {
-
+    /**
+     * Thêm mới bình luận (Comment)
+     *
+     * @param comment
+     * @return Long
+     */
     @Override
     public Long insert(Comment comment) {
         Long id = null;
@@ -53,6 +58,12 @@ public class CommentRepositoryImpl implements CommentRepository {
         return id;
     }
 
+    /**
+     * Tìm bình luận theo id
+     *
+     * @param id
+     * @return Comment
+     */
     @Override
     public Comment findById(Long id) {
         Comment comment = new Comment();
@@ -81,6 +92,12 @@ public class CommentRepositoryImpl implements CommentRepository {
         return comment;
     }
 
+    /**
+     * Xoá bình luận theo id
+     *
+     * @param id
+     * @return Comment
+     */
     @Override
     public void delete(Long id) {
         Connection connection = null;

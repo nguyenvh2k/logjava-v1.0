@@ -27,6 +27,13 @@ public class PostController {
     @Autowired
     private CategoryService categoryService;
 
+    /**
+     * Hiển thị trang chủ và load
+     * Danh sách bài viết, chủ đề, Bài viết nổi bật
+     *
+     * @param model
+     * @return String
+     */
     @GetMapping({"/home","/"})
     public String index(Model model){
         UserModel user = (UserModel) session.getAttribute("userSession");
@@ -39,6 +46,14 @@ public class PostController {
         model.addAttribute("categories",categoryModels);
         return "/web/home";
     }
+
+    /**
+     * Trang thêm mới bài viết
+     * Danh sách bài viết, chủ đề, Bài viết nổi bật
+     *
+     * @param model
+     * @return String
+     */
     @GetMapping({"/post"})
     public String createNewPost(Model model){
         UserModel user = (UserModel) session.getAttribute("userSession");
@@ -55,6 +70,14 @@ public class PostController {
         return "/web/create-post";
     }
 
+    /**
+     * Trang chi tiết bài viết
+     *
+     *
+     * @param id
+     * @param model
+     * @return String
+     */
     @GetMapping({"/new-post/{id}"})
     public String blog(@PathVariable("id")Long id, Model model){
         UserModel user = (UserModel) session.getAttribute("userSession");
@@ -72,6 +95,13 @@ public class PostController {
         return "/web/post";
     }
 
+    /**
+     * Trang cập nhật bài viết
+     *
+     * @param id
+     * @param model
+     * @return
+     */
     @GetMapping("/edit-post/{id}")
     public String editBlog(@PathVariable("id")Long id,Model model){
         UserModel user = (UserModel) session.getAttribute("userSession");

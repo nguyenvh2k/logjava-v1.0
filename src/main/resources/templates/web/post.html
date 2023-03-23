@@ -7,30 +7,7 @@
     <th:block th:insert="~{/layout/logjava::link}"></th:block>
     <th:block th:insert="~{/layout/logjava::head/script}"></th:block>
     <style>
-        #status {
-            width: 200px;
-            height: 200px;
-            position: fixed;
-            left: 50%;
-            z-index: 100;
-            top: 50%;
-            background-image: url('../static/images/Ring-1s-200px.gif');
-            background-repeat: no-repeat;
-            background-position: center;
-            margin: -100px 0 0 -100px;
-            z-index: 1001
-        }
 
-        #loader {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #FFF;
-            z-index: 1000
-        }
     </style>
     <script>
         $(window).bind("load", function () {
@@ -41,8 +18,6 @@
 </head>
 
 <body>
-    <div id='status'></div>
-    <div id='loader'></div>
     <div class="wrap">
         <header th:replace="~{/layout/logjava::header}"></header>
         <section class="site-section py-sm">
@@ -56,12 +31,16 @@
                     <div class="col-md-12 col-lg-8 main-content">
                         <!-- <img th:src="@{${'/'+post.image}}" alt="Image" class="img-fluid mb-5"> -->
                         <h1 class="mb-4" th:text="${post.title}"></h1>
+                        <input type="hidden" th:value="${post.id}" id="postId">
                         <div class="post-meta">
-                            <span class="author mr-2"><img th:src="@{${'/'+post.userModel.getImage}}" alt="Colorlib"
+                            <span class="author mr-2"><img style="height: 30px;" th:src="@{${'/'+post.userModel.getImage}}" alt="Colorlib"
                                     class="mr-2" th:text="${post.userModel.getFullname}"></span>&bullet;
                             <span class="mr-2" th:text="${post.createdDate}"></span> &bullet;
                             <th:block th:if="${userSession}">
-                                <th:block th:if="${post.userId==userSession.id}"><a th:href="@{/edit-post/{id}(id=${post.id})}" class="category" style="background-color:#5BC0DE;">Chỉnh sửa</a></th:block>
+                                <th:block th:if="${post.userId==userSession.id}">
+                                    <a th:href="@{/edit-post/{id}(id=${post.id})}" class="category" style="background-color:#5BC0DE;">Cập nhật</a>
+                                    <a href="#" id="btnDeletePost" class="category" style="background-color:#C82333;">Xoá</a>
+                                </th:block>
                             </th:block>
                             
                         </div>
@@ -89,10 +68,9 @@
                                                 </th:block>
                                             </div>
                                         </li>
-
-                                </div>
+                                    </th:block>
                             </ul>
-                            <div class="comment-form pt-5">
+                            <div class="comment-form pt-5 mt-2">
                                 <th:block th:if="${userSession}">
                                     <h3 class="mb-2">Để lại bình luận</h3>
                                     <form class="p-4 form-inline bg-light">
@@ -120,32 +98,41 @@
                                     <a th:href="@{/login-page}" class="btn btn-success mb-2">Đăng nhập</a>
                                 </th:block>
                             </div>
-                            <!-- END comment-list -->
                         </div>
-                        <div class="col-md-12 col-lg-4 sidebar">
-                            <div th:replace="~{/layout/logjava::search}"></div>
-                            <div th:replace="~{/layout/logjava::avatar}"></div>
-                            <div th:replace="~{/layout/logjava::popular-post}"></div>
-                            <div th:replace="~{/layout/logjava::categories}"></div>
-                            <div th:replace="~{/layout/logjava::tag}"></div>
-                        </div>
+                    </div>
+                    <div class="col-md-12 col-lg-4 sidebar">
+                        <div th:replace="~{/layout/logjava::search}"></div>
+                        <div th:replace="~{/layout/logjava::avatar}"></div>
+                        <div th:replace="~{/layout/logjava::popular-post}"></div>
+                        <div th:replace="~{/layout/logjava::categories}"></div>
+                        <div th:replace="~{/layout/logjava::tag}"></div>
                     </div>
                 </div>
             </div>
         </section>
-        <footer th:replace="~{layout/logjava::footer}"></footer>
     </div>
-    <script>
-    // var editor = '';
-    // $(document).ready(function () {
-    //     editor = CKEDITOR.replace('comment');
-    // });
-    // $('#btnSubmit').click(function (e) {
-    //     e.preventDefault();
-    //     var obj = editor.getData();
-    //     console.log(obj);
-    // })
-    </script>
+    <div class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <i class="fa fa-exclamation-triangle p-1 text-danger" aria-hidden="true"></i>
+                    <h5 class="modal-title">Thông báo</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Bạn có chắc chắn muốn xoá bài viết không ?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" id="delete">Có</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="noDelete">Không</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer th:replace="~{layout/logjava::footer}"></footer>
+    <div id="toast"></div>
     <!--Comment-->
     <script th:inline="javascript" th:if="${userSession!=null}">
         $('#btnComment').click(function (e) {
@@ -182,6 +169,54 @@
                 error: function (error) {
                     console.log(error);
                 }
+            });
+        }
+
+    </script>
+    <!--Post-->
+    <script>
+        var modal = $('.modal');
+        $('#btnDeletePost').click(function (e){
+            e.preventDefault();
+            var data = {};
+            data["id"]= $('#postId').val();
+            modal.show();
+            $('#delete').click(function (){
+                deletePost(data);
+            });
+            $('#noDelete').click(function (){
+                modal.hide();
+            });
+            $(window).on('click', function (e) {
+                if ($(e.target).is('.modal')) {
+                    modal.hide();
+                }
+            });
+        })
+        function deletePost(data){
+            $.ajax({
+                url:"/api/v1/post",
+                type: "DELETE",
+                data:JSON.stringify(data),
+                contentType: "application/json",
+                dataType: "json",
+                success:function (result){
+                    showSuccessToast();
+                    setTimeout(function () {
+                        window.location.href = "/home";
+                    }, 5000);
+                },
+                error:function (error){
+                    console.log(error);
+                }
+            });
+        }
+        function showSuccessToast() {
+            toast({
+                title: "Thông báo!",
+                message: "Bạn đã đăng bài viết thành công hệ thống sẽ chuyển về trang chủ trong vài giây !",
+                type: "success",
+                duration: 5000
             });
         }
     </script>

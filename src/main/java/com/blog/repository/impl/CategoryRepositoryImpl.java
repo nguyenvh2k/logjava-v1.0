@@ -12,7 +12,11 @@ import java.util.ArrayList;
 import java.util.List;
 @Repository
 public class CategoryRepositoryImpl implements CategoryRepository {
-
+    /**
+     * Lấy danh sách Category từ database
+     *
+     * @return List<CategoryModel>
+     */
     @Override
     public List<CategoryModel> findAll() {
         List<CategoryModel> categoryModelList = new ArrayList<>();
@@ -38,6 +42,11 @@ public class CategoryRepositoryImpl implements CategoryRepository {
         return categoryModelList;
     }
 
+    /**
+     * Lấy danh sách số lượng các Category từ database
+     *
+     * @return List<CategoryModel>
+     */
     @Override
     public List<CategoryModel> findAllNav() {
         List<CategoryModel> categoryModelList = new ArrayList<>();
@@ -64,6 +73,11 @@ public class CategoryRepositoryImpl implements CategoryRepository {
         return categoryModelList;
     }
 
+    /**
+     * Tìm category theo tên
+     *
+     * @return CategoryModel
+     */
     @Override
     public CategoryModel findByName(String name) {
         CategoryModel category = new CategoryModel();

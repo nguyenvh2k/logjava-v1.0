@@ -5,6 +5,8 @@ import com.blog.model.Comment;
 import com.blog.model.PostModel;
 import com.blog.model.UserModel;
 import com.blog.repository.PostRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
@@ -18,6 +20,14 @@ import java.util.List;
 @Repository
 public class PostRepositoryImpl implements PostRepository {
 
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
+
+
+    /**
+     * Lấy danh sách tất cả bài viết
+     *
+     * @return List<PostModel>
+     */
     @Override
     public List<PostModel> findAll() {
         List<PostModel> posts = new ArrayList<>();
@@ -26,14 +36,7 @@ public class PostRepositoryImpl implements PostRepository {
         PreparedStatement statement = null;
         try {
             connection = MySQLUtil.getConnection();
-            String sql = "select\n" +
-                    "\t*\n" +
-                    "from\n" +
-                    "\tposts p\n" +
-                    "join users u on\n" +
-                    "\tu.id = p.user_id\n" +
-                    "join category c2 on\n" +
-                    "\tc2.id = p.category_id";
+            String sql = "select * from posts p join users u on u.id = p.user_id join category c2 on c2.id = p.category_id";
             statement = connection.prepareStatement(sql);
             resultSet = statement.executeQuery();
             while (resultSet.next()){
@@ -52,14 +55,19 @@ public class PostRepositoryImpl implements PostRepository {
                 postModel.setUserModel(userModel);
                 posts.add(postModel);
             }
-            System.out.println("Lay danh sach post thanh cong !");
+            logger.info("Get the list of successful posts!");
         }catch (SQLException e){
-            System.out.println("Xay ra exception!");
-            System.out.println(e.getMessage());
+            logger.error("Get list of failed posts !");
+            logger.error("Exception : {}",e.getMessage());
         }
         return posts;
     }
 
+    /**
+     * Tìm bài viết theo id
+     *
+     * @return PostModel
+     */
     @Override
     public PostModel findById(Long id) {
         PostModel postModel = new PostModel();
@@ -95,14 +103,19 @@ public class PostRepositoryImpl implements PostRepository {
                 userModel.setImage(resultSet.getString("avatar"));
                 postModel.setUserModel(userModel);
             }
-            System.out.println("Lay danh sach post thanh cong !");
+            logger.info("Get list of posts by id success !");
         }catch (SQLException e){
-            System.out.println("Xay ra exception!");
-            System.out.println(e.getMessage());
+            logger.error("Get list of failed posts !");
+            logger.error("Exception : {}",e.getMessage());
         }
         return postModel;
     }
 
+    /**
+     * Lấy danh sách bài viết nổi bật
+     *
+     * @return List<PostModel>
+     */
     @Override
     public List<PostModel> findByPopular() {
         List<PostModel> posts = new ArrayList<>();
@@ -124,14 +137,20 @@ public class PostRepositoryImpl implements PostRepository {
                 postModel.setCreatedDate(resultSet.getTimestamp("created_date"));
                 posts.add(postModel);
             }
-            System.out.println("Lay danh sach post thanh cong !");
+            logger.info("Get the list of highly viewed posts successfully !");
         }catch (SQLException e){
-            System.out.println("Xay ra exception!");
-            System.out.println(e.getMessage());
+            logger.error("Get list of posts by id failed !");
+            logger.error("Exception : {}",e.getMessage());
         }
         return posts;
     }
 
+    /**
+     * Thêm mới bài viết
+     *
+     * @param postModel
+     * @return Boolean
+     */
     @Override
     public Boolean insert(PostModel postModel) {
         Connection connection = null;
@@ -151,17 +170,16 @@ public class PostRepositoryImpl implements PostRepository {
             statement.setString(8, postModel.getCreatedBy());
             statement.executeUpdate();
             connection.commit();
-            System.out.println("Insert post success !");
+            logger.info("Insert post success !");
             return true;
         }catch(SQLException e){
-            System.out.println("Insert post failed !");
-            System.out.println("Xay ra exception o insert post repo !");
-            System.out.println("Exception: "+e.getMessage());
+            logger.error("Insert post failed !");
+            logger.error("Exception : {}",e.getMessage());
             try {
                 connection.rollback();
-                System.out.println("Rollback thanh cong !");
+                logger.warn("Rollback Success !");
             } catch (SQLException e1) {
-                System.out.println("Roll back that bai !");
+                logger.error("Rollback Failed !");
             }
         }finally{
             try {
@@ -174,6 +192,7 @@ public class PostRepositoryImpl implements PostRepository {
         return false;
     }
 
+    @Override
     public List<PostModel> findComment(Long id){
         Connection connection = null;
         PreparedStatement statement = null;
@@ -207,10 +226,10 @@ public class PostRepositoryImpl implements PostRepository {
                 postModel.setComment(comment);
                 postModel.setUserModel(userModel);
                 commentList.add(postModel);
+                logger.info("Find comment success !");
             }
         }catch (SQLException e){
-            System.out.println("xay ra exception khi find comment :");
-            System.out.println(e.getMessage());
+            logger.error("Find comment failed exception : {}",e.getMessage());
         }finally {
             try {
                 connection.close();
@@ -223,6 +242,11 @@ public class PostRepositoryImpl implements PostRepository {
         return commentList;
     }
 
+    /**
+     * Cập nhật/Chỉnh sửa bài viết
+     *
+     * @param postModel
+     */
     @Override
     public void update(PostModel postModel) {
         Connection connection = null;
@@ -241,15 +265,14 @@ public class PostRepositoryImpl implements PostRepository {
             statement.setLong(7,postModel.getId());
             statement.executeUpdate();
             connection.commit();
-            System.out.println("Update success!");
+            logger.info("Update post success !");
         }catch (SQLException e){
-            System.out.println("Xay ra Exception khi update post:");
-            System.out.println(e.getMessage());
+            logger.error("Update post failed exception: {}",e.getMessage());
             try {
                 connection.rollback();
-                System.out.println("Rollback success !");
+                logger.warn("Rollback Success !");
             } catch (SQLException ex) {
-                System.out.println("Rollback failed !");
+                logger.error("Rollback Failed !");
                 System.out.println(e.getMessage());
             }
         }finally {
@@ -257,11 +280,49 @@ public class PostRepositoryImpl implements PostRepository {
                 connection.close();
                 statement.close();
             } catch (SQLException e) {
-                System.out.println("Loi dong connection");
-                System.out.println(e.getMessage());
+                logger.error("Close connection failed !");
             }
         }
     }
 
+    /**
+     * Xoá bài viết và xoá comment của bài viết đó
+     *
+     */
+    public void delete(Long id){
+        Connection connection = null;
+        PreparedStatement statement1 = null;
+        PreparedStatement statement2 = null;
+        try {
+            connection = MySQLUtil.getConnection();
+            connection.setAutoCommit(false);
+            String sqlComment = "delete from comment where new_id=?";
+            statement1 = connection.prepareStatement(sqlComment);
+            statement1.setLong(1,id);
+            statement1.executeUpdate();
+            String sqlPost = "delete from posts where id=?";
+            statement2 = connection.prepareStatement(sqlPost);
+            statement2.setLong(1,id);
+            statement2.executeUpdate();
+            connection.commit();
+            logger.info("Delete posts success !");
+        }catch (SQLException e){
+            logger.error("Delete post failed Exception: {}",e.getMessage());
+            try {
+                connection.rollback();
+                logger.warn("Rollback success !");
+            } catch (SQLException ex) {
+                logger.warn("Rollback failed !");
+            }
+        }finally {
+            try {
+                connection.close();
+                statement1.close();
+                statement2.close();
+            } catch (SQLException e) {
+                logger.error("Close connection failed !");
+            }
+        }
 
+    }
 }

@@ -3,6 +3,8 @@ package com.blog.repository.impl;
 import com.blog.repository.UserRepository;
 import com.blog.utils.MySQLUtil;
 import com.blog.model.UserModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
@@ -12,7 +14,13 @@ import java.sql.SQLException;
 
 @Repository
 public class UserRepositoryImpl implements UserRepository {
-
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    /**
+     * Tìm User theo tên
+     *
+     * @param userModel
+     * @return UserModel
+     */
     @Override
     public UserModel findByUsername(UserModel userModel) {
         UserModel user = null;
@@ -34,10 +42,10 @@ public class UserRepositoryImpl implements UserRepository {
                 user.setEmail(resultSet.getString("email"));
                 user.setImage(resultSet.getString("avatar"));
             }
+            logger.info("Find user by name success");
             return user;
         }catch (SQLException e){
-            System.out.println("Xay ra Exception o UserRepository:");
-            System.out.println(e.getMessage());
+            logger.error("Xay ra Exception o UserRepository:",e.getMessage());
         }finally {
             try {
                 connection.close();
@@ -50,6 +58,12 @@ public class UserRepositoryImpl implements UserRepository {
         return null;
     }
 
+    /**
+     * Thêm mới user
+     *
+     * @param userModel
+     * @return Boolean
+     */
     @Override
     public Boolean insert(UserModel userModel) {
         Connection connection = null;
@@ -68,14 +82,13 @@ public class UserRepositoryImpl implements UserRepository {
             statement.setString(7,userModel.getImage());
             statement.executeUpdate();
             connection.commit();
-            System.out.println("Insert success");
+            logger.info("Insert success");
             return true;
         }catch (SQLException e){
-            System.out.println("Xay ra Exception o UserRepository:");
-            System.out.println(e.getMessage());
+            logger.error("Xay ra Exception o UserRepository:",e.getMessage());
             try {
                 connection.rollback();
-                System.out.println("Rollback success!");
+                logger.info("Rollback success!");
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }

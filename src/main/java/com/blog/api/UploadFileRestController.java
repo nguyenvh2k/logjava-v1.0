@@ -1,6 +1,9 @@
 package com.blog.api;
 
 import com.blog.form.UploadForm;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -19,13 +22,17 @@ import java.time.format.DateTimeFormatter;
 
 @RestController
 public class UploadFileRestController {
-
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
     private static final Path CURRENT_FOLDER = Paths.get(System.getProperty("user.dir"));
 
+    /**
+     * Hàm upload file từ from input html
+     *
+     * @param form
+     * @return String (Đường dẫn file)
+     */
     @PostMapping("/rest/uploadMultiFiles")
     public ResponseEntity<?> multiUploadFileModel(@ModelAttribute UploadForm form) {
-
-        System.out.println("Description:" + form.getDescription());
 
         String result = null;
         try {
@@ -34,9 +41,11 @@ public class UploadFileRestController {
         // Here Catch IOException only.
         // Other Exceptions catch by RestGlobalExceptionHandler class.
         catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Upload file failed !");
+            logger.error("Exception : {}",e.getMessage());
             return new ResponseEntity<>("Error: " + e.getMessage(), HttpStatus.BAD_REQUEST);
         }
+        logger.info("Upload file success !");
         return new ResponseEntity<String>(result, HttpStatus.OK);
     }
 
@@ -63,6 +72,12 @@ public class UploadFileRestController {
         return sb.toString();
     }
 
+    /**
+     * Hàm lấy định dạng file (Đuôi file png,jpg,...)
+     *
+     * @param fileName
+     * @return String
+     */
     private String getFileExtension(String fileName) {
         if (fileName == null) {
             return null;
@@ -72,6 +87,13 @@ public class UploadFileRestController {
         return fileNameParts[fileNameParts.length - 1];
     }
 
+    /**
+     * Hàm đổi tên file
+     *
+     * @param fileName
+     * @param currentFile
+     * @return MultipartFile
+     */
     private MultipartFile getNewFile(String fileName, MultipartFile currentFile){
         return new MultipartFile() {
             @Override

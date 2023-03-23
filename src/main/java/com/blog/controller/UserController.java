@@ -18,6 +18,13 @@ public class UserController {
     @Autowired
     private HttpSession session;
 
+    /**
+     * Kiểm tra đăng nhập
+     *
+     * @param userModel
+     * @param model
+     * @return String
+     */
     @PostMapping ("/check-login")
     public String checkLogin(UserModel userModel,Model model) {
         UserModel user = userService.checkLogin(userModel);
@@ -29,6 +36,12 @@ public class UserController {
         return "redirect:/home";
     }
 
+    /**
+     * Trang đăng nhập
+     *
+     * @param model
+     * @return String
+     */
     @GetMapping("/login-page")
     public String login(Model model){
         model.addAttribute("user",new UserModel());
@@ -36,11 +49,21 @@ public class UserController {
         return "login";
     }
 
+    /**
+     * Trang đăng ký
+     *
+     * @return String
+     */
     @GetMapping("/dang-ky")
     public String signup(){
         return "register";
     }
 
+    /**
+     * Đăng xuất
+     *
+     * @return String
+     */
     @GetMapping("/logout")
     public String logout(){
         session.removeAttribute("userSession");
