@@ -26,7 +26,7 @@
                         <div class="post-meta">
                             <span class="author mr-2"><img style="height: 30px;"
                                     th:src="@{${'/'+post.userModel.getImage}}" alt="Colorlib" class="mr-2"
-                                    th:text="${post.userModel.getFullname}"></span>&bullet;
+                                    th:text="${post.userModel.getFullname}" onError="this.src='/images/avatar.png'"></span>&bullet;
                             <span class="mr-2" th:text="${post.date}"></span> &bullet;
                             <th:block th:if="${userSession}">
                                 <th:block th:if="${post.userId==userSession.id}">
@@ -50,7 +50,7 @@
                                 <th:block th:each="comment:${comments}">
                                     <li class="comment" th:if="${comment.comment.getContent!=null}">
                                         <div class="vcard">
-                                            <img th:src="@{${'/'+comment.userModel.getImage}}" alt="Image placeholder">
+                                            <img th:src="@{${'/'+comment.userModel.getImage}}" alt="Image placeholder" onError="this.src='/images/avatar.png'">
                                         </div>
                                         <div class="comment-body">
                                             <h3 th:text="${comment.userModel.getFullname}"></h3>
@@ -74,7 +74,7 @@
                                                 <div class="col-sm-2">
                                                     <span class="author mr-4">
                                                         <img th:src="@{${'/'+userSession.image}}" class="rounded-circle"
-                                                            alt="Image placeholder" width="50vh" height="50vh">
+                                                            alt="Image placeholder" width="50vh" height="50vh" onError="this.src='/images/avatar.png'" >
                                                     </span>
                                                 </div>
                                                 <div class="col-sm-10">
@@ -153,7 +153,7 @@
                     console.log(result);
                     $('.comment-list').append(`<li class="comment">
                   <div class="vcard">
-                    <img src="[(${'/' + userSession.image})]" alt="Image placeholder">
+                    <img src="[(${'/' + userSession.image})]" alt="Image placeholder" onError="this.src='/images/avatar.png'">
                   </div>
                   <div class="comment-body">
                     <h3>[(${userSession.fullname})]</h3>
@@ -210,8 +210,8 @@
 
         function showSuccessToast() {
             toast({
-                title: "Thông báo!",
-                message: "Bạn đã xoá bài viết thành công hệ thống sẽ chuyển về trang chủ trong vài giây !",
+                title: "Xoá bài viết thành công !",
+                message: "Hệ thống sẽ chuyển về trang chủ trong giây lát !",
                 type: "warning",
                 duration: 5000
             });

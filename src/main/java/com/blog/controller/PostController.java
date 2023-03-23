@@ -107,6 +107,10 @@ public class PostController {
     public String editBlog(@PathVariable("id")Long id,Model model){
         UserModel user = (UserModel) session.getAttribute("userSession");
         model.addAttribute("userSession",user);
+        if (user==null){
+            session.setAttribute("message2", "Login to write blog");
+            return "redirect:/login-page";
+        }
         PostModel post = postService.findById(id);
         model.addAttribute("post",post);
         List<CategoryModel> categories =categoryService.findAll();

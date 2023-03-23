@@ -262,12 +262,21 @@
         timeout: 1000000,
         success: function (data, textStatus, jqXHR) {
           console.log(data);
+          showSuccessUploadImageToast();
           $("#result").val(data);
           $("#pic1").attr("src", data);
         },
         error: function (jqXHR, textStatus, errorThrown) {
           console.log("ERROR : ", jqXHR.responseText);
         }
+      });
+    }
+    function showSuccessUploadImageToast() {
+      toast({
+        title: "Upload ảnh thành công !",
+        message: "Ảnh preview sẽ được load phía dưới.",
+        type: "success",
+        duration: 5000
       });
     }
   </script>
@@ -307,8 +316,8 @@
 
     function showSuccessToast() {
       toast({
-        title: "Thông báo!",
-        message: "Bạn đã đăng bài viết thành công hệ thống sẽ chuyển về trang chủ trong vài giây !",
+        title: "Đăng blog thành công!",
+        message: "Hệ thống sẽ chuyển về trang chủ trong giây lát !",
         type: "success",
         duration: 5000
       });

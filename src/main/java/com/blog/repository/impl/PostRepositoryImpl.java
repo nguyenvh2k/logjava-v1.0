@@ -58,13 +58,12 @@ public class PostRepositoryImpl implements PostRepository {
                 userModel.setImage(resultSet.getString("avatar"));
                 postModel.setUserModel(userModel);
                 postModel.setDate(dateFormat.format(new Date(postModel.getCreatedDate().getTime())));
-                System.out.println(postModel.getDate());
                 posts.add(postModel);
             }
             logger.info("Get the list of successful posts!");
         }catch (SQLException e){
-            logger.error("Get list of failed posts !");
-            logger.error("Exception : {}",e.getMessage());
+            logger.error("Get list of failed posts !"); 
+                       logger.error("Exception : {}",e.getMessage());
         }
         return posts;
     }
@@ -332,5 +331,47 @@ public class PostRepositoryImpl implements PostRepository {
             }
         }
 
+    }
+    /**
+     * Tìm tất cả bài viết theo userId
+     * 
+     * @return List<PostModel>
+     */
+    @Override
+    public List<PostModel> findByUserId(Long id) {
+        List<PostModel> postList = new ArrayList<>();
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = MySQLUtil.getConnection();
+            String sql = "select * from posts p join users u on u.id = p.user_id join category c on c.id = p.category_id where p.user_id = ? ";
+            statement = connection.prepareStatement(sql);
+            statement.setLong(1, id);
+            resultSet = statement.executeQuery();
+            while(resultSet.next()){
+                PostModel postModel = new PostModel();
+                postModel.setTitle(resultSet.getString("title"));
+                postModel.setShortDescription(resultSet.getString("short_description"));
+                postModel.setId(resultSet.getLong("id"));
+                UserModel userModel = new UserModel();
+                userModel.setFullname(resultSet.getString("fullname"));
+                userModel.setUsername(resultSet.getString("username"));
+                postModel.setUserModel(userModel);
+                postList.add(postModel);
+            }
+        } catch (SQLException e) {
+            logger.error("Find list of posts by user id failed !");
+            logger.error("Exception : {}",e.getMessage());
+        }finally{
+                try {
+                    if(connection!=null){
+                    connection.close();
+                    }
+                } catch (SQLException e) {
+                    logger.error(e.getMessage());
+                }
+        }
+        return postList;
     }
 }

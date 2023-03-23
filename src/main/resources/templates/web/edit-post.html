@@ -230,10 +230,9 @@
     <footer th:replace="~{layout/logjava::footer}"></footer>
   </div>
   <div id="toast"></div>
-  <script>
+  <script  th:inline="javascript" type="text/javascript">
     $(document).ready(function() {
       $("#submitButton").click(function(event) {
-        // Stop default form Submit.
         event.preventDefault();
         ajaxSubmitForm();
       });
@@ -245,7 +244,6 @@
       var data = new FormData(form);
 
       $("#submitButton").prop("disabled", true);
-
       $.ajax({
         type: "POST",
         enctype: 'multipart/form-data',
@@ -256,19 +254,28 @@
         contentType: false,
         cache: false,
         timeout: 1000000,
-        success: function(data, textStatus, jqXHR) {
+        success: function(data) {
           console.log(data);
+          showSuccessToast2();
           $("#result").val(data);
           $("#pic1").attr("src", data);
         },
-        error: function(jqXHR, textStatus, errorThrown) {
-          console.log("ERROR : ", jqXHR.responseText);
+        error: function(error) {
+          console.log(error);
         }
+      });
+    }
+    function showSuccessToast2() {
+      toast({
+        title: "Upload ảnh thành công !",
+        message: "Ảnh preview sẽ được load ở phía dưới !",
+        type: "success",
+        duration: 5000
       });
     }
   </script>
 
-  <script>
+  <script th:inline="javascript" type="text/javascript">
     $('#btnSubmit').click(function (e){
       e.preventDefault();
       var data = {};
@@ -288,12 +295,11 @@
         type:'PUT',
         data:JSON.stringify(data),
         contentType:'application/json',
-        dataType:'json',
         success:function (result){
           showSuccessToast();
           setTimeout(function(){
             window.location.href = "/home";
-          },500);
+          },1000);
         },
         error:function (error){
           console.log(error);
@@ -302,8 +308,8 @@
     }
     function showSuccessToast() {
       toast({
-        title: "Thông báo!",
-        message: "Bạn đã cập nhật bài viết thành công hệ thống sẽ chuyển về trang chủ trong vài giây !",
+        title: "Cập nhật bài viết thành công !",
+        message: "Hệ thống sẽ chuyển về trang chủ trong vài giây !",
         type: "success",
         duration: 5000
       });

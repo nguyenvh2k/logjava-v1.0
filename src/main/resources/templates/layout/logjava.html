@@ -90,7 +90,7 @@
                                 <div class="dropdown-menu" aria-labelledby="dropdown05">
                                     <div class="post-meta p-2">
                                         <span class="">
-                                            <img class="mr-2" style="width: 30px;height: 30px;border-radius: 50%;display: inline-block;" th:src="@{${'/'+userSession.image}}">
+                                            <img class="mr-2" style="width: 30px;height: 30px;border-radius: 50%;display: inline-block;" th:src="@{${'/'+userSession.image}}" onError="this.src='/images/avatar.png'">
                                             <th:block th:text="${userSession.fullname}"></th:block>
                                         </span>
                                     </div>
@@ -149,7 +149,7 @@
         <ul th:each="post:${popular}">
             <li>
                 <a th:href="@{/new-post/{id}(id=${post.id})}">
-                    <img th:src="@{'/' + ${post.image}}" alt="Image placeholder" class="mr-4">
+                    <img th:src="@{'/' + ${post.image}}" alt="Image placeholder" class="mr-4" onError="this.src='/images/thumbnail.png'">
                     <div class="text">
                         <h4 th:text="${post.title}"></h4>
                         <div class="post-meta">

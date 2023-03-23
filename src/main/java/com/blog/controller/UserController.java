@@ -73,6 +73,9 @@ public class UserController {
     @GetMapping("/profile")
     public String profile(Model model){
         UserModel user = (UserModel) session.getAttribute("userSession");
+        if(user==null){
+            return "redirect:/login-page";
+        }
         model.addAttribute("userSession", user);
         List<CategoryModel> categoryModels = categoryService.findAllNav();
         List<PostModel> postPopular = postService.findByPopular();
