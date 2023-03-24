@@ -1,9 +1,11 @@
 package com.blog.repository;
 
-import com.blog.model.UserModel;
+import com.blog.entity.User;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
-public interface UserRepository {
-    UserModel findByUsername(UserModel userModel);
-    Boolean insert(UserModel userModel);
-    void updateAvatar(UserModel userModel);
+@Repository("userRepo")
+public interface UserRepository extends CrudRepository<User,Long> {
+    User findByUserName(String userName);
+    User findByEmail(String email);
 }

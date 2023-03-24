@@ -111,14 +111,16 @@
 <body>
   <div id='status'></div>
   <div id='loader'></div>
-<form class="form-signin text-center">
+<form class="form-signin text-center" th:action="@{/login}" method="post">
   <img class="mb-4 text-center" src="./images/icons8-oak-leaf-96.png" alt="" width="72" height="72">
   <h1 class="h3 mb-3 font-weight-normal text-center" style="color: #C2CE34;">Log Java</h1>
   <p>Chia sẻ và học hỏi kiến thức một cách dễ dàng hơn.</p>
   <label for="username" class="sr-only">Tài khoản</label>
-  <input type="text" id="username" class="form-control mb-2" placeholder="Tài khoản" required>
+  <p th:if="${param.error}" class="error">Invalid email or password</p>
+  <p th:if="${param.logout}" class="success">You have been logged out</p>
+  <input type="text" id="username" class="form-control mb-2" placeholder="Tài khoản" name="username" required>
   <label for="password" class="sr-only">Password</label>
-  <input type="password" id="password" class="form-control" placeholder="Mật khẩu" required>
+  <input type="password" id="password" class="form-control" placeholder="Mật khẩu"  name="password" required>
   <div class="checkbox mb-3">
     <label>
       <input type="checkbox" value="remember-me"> Ghi nhớ tài khoản
