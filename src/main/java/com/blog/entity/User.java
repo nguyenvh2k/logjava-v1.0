@@ -1,2 +1,4 @@
-package com.blog.entity;public class User {
+package com.blog.entity;
+
+public class User {
 }

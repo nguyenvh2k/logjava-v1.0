@@ -1,2 +1,4 @@
-package com.blog.dto;public class MyUser {
+package com.blog.dto;
+
+public class MyUser {
 }

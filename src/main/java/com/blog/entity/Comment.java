@@ -1,2 +1,4 @@
-package com.blog.entity;public class Comment {
+package com.blog.entity;
+
+public class Comment {
 }

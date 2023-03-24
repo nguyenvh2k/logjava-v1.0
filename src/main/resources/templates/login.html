@@ -133,34 +133,6 @@
 
 <script th:src="@{/js/toast.js}"></script>
 <script type="text/javascript" th:inline="javascript">
-  
-  $('#btnSubmit').click(function(e){
-    e.preventDefault();
-    var data = {};
-    data["username"] = $('#username').val();
-    data["password"] = $('#password').val();
-    login(data);
-  });
-  function login(data) {
-      $.ajax({
-        url: '/api/v1/user/login',
-        type: 'POST',
-        data: JSON.stringify(data),
-        contentType: 'application/json',
-        dataType: 'json',
-        success: function (result) {
-          showSuccessToast();
-          setTimeout(function () {
-            window.location.href = "/home";
-          },500);
-        },
-        error: function (error) {
-          showErrorToast();
-          $('#username').val(null);
-          $('#password').val(null);
-        }
-      });
-    }
   function showErrorToast() {
     toast({
         title: "Đăng nhập thất bại !",

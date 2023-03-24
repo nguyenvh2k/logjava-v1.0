@@ -1,2 +1,4 @@
-package com.blog.entity;public class Category {
+package com.blog.entity;
+
+public class Category {
 }

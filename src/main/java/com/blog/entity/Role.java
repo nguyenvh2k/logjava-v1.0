@@ -1,2 +1,4 @@
-package com.blog.entity;public class Role {
+package com.blog.entity;
+
+public class Role {
 }
