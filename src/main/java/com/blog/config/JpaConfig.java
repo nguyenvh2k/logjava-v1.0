@@ -54,11 +54,10 @@ public class JpaConfig {
 
     Properties additionalProperties() {
         Properties properties = new Properties();
-//		properties.setProperty("hibernate.hbm2ddl.auto", "create-drop");
+//		properties.setProperty("spring.jpa.show-sql", "true");
 //		properties.setProperty("hibernate.hbm2ddl.auto", "create");
         properties.setProperty("hibernate.hbm2ddl.auto", "update");
         properties.setProperty("hibernate.enable_lazy_load_no_trans", "true");
-        properties.setProperty("hibernate.show_sql","true");
         return properties;
     }
 }
