@@ -6,30 +6,30 @@
     <th:block th:insert="~{/layout/logjava::link}"></th:block>
     <th:block th:insert="~{/layout/logjava::head/script}"></th:block>
     <style>
-        #status {
-            width: 200px;
-            height: 200px;
-            position: fixed;
-            left: 50%;
-            z-index: 100;
-            top: 50%;
-            background-image: url('/images/Ring-1s-200px.gif');
-            background-repeat: no-repeat;
-            background-position: center;
-            margin: -100px 0 0 -100px;
-            z-index: 1001
-        }
-    
-        #loader {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #FFF;
-            z-index: 1000
-        }
+.lds-dual-ring {
+  display: inline-block;
+  width: 80px;
+  height: 80px;
+}
+.lds-dual-ring:after {
+  content: " ";
+  display: block;
+  width: 64px;
+  height: 64px;
+  margin: 8px;
+  border-radius: 50%;
+  border: 6px solid #fff;
+  border-color: #fff transparent #fff transparent;
+  animation: lds-dual-ring 1.2s linear infinite;
+}
+@keyframes lds-dual-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
     </style>
     <script>
       //<![CDATA[
@@ -41,8 +41,7 @@
     </script>
 </head>
 <body>
-    <div id='status'></div>
-    <div id='loader'></div>
+    <div class="lds-dual-ring"></div>
     <div class="wrap">
         <header th:replace="~{/layout/logjava::header}"></header>
         <section class="site-section py-sm">
