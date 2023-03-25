@@ -16,7 +16,7 @@
     <link rel="stylesheet" th:href="@{/fonts/fontawesome/css/font-awesome.min.css}">
     <link rel="stylesheet" th:href="@{/fonts/flaticon/font/flaticon.css}">
     <link rel="stylesheet" th:href="@{/css/style.css}">
-
+    <link rel="stylesheet" th:href="@{/css/loading.css}">
     <script type="text/javascript" src="../static/jquery/jquery-3.6.4.min.js"
             th:src="@{/jquery/jquery-3.6.4.min.js}"></script>
     <script type="text/javascript" src="../static/jquery/jquery.twbsPagination.min.js"
@@ -31,6 +31,8 @@
  }
 </style>
 <body>
+    <div class="se-pre-con" th:fragment="loading">
+    </div>
 <header role="banner" th:fragment="header">
     <div class="container logo-wrap">
         <div class="row pt-5">
@@ -214,5 +216,6 @@
 <script src="../static/js/jquery.waypoints.min.js" th:src="@{/js/jquery.waypoints.min.js}"></script>
 <script src="../static/js/jquery.stellar.min.js" th:src="@{/js/jquery.stellar.min.js}"></script>
 <script src="../static/js/main.js" th:src="@{/js/main.js}"></script>
+<script src="../static/js/loading.js" th:src="@{/js/loading.js}"></script>
 </body>
 </html>
