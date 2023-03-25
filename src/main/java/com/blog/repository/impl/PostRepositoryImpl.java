@@ -354,6 +354,7 @@ public class PostRepositoryImpl implements PostRepository {
                 postModel.setTitle(resultSet.getString("title"));
                 postModel.setShortDescription(resultSet.getString("short_description"));
                 postModel.setId(resultSet.getLong("id"));
+                postModel.setImage(resultSet.getString("image"));
                 UserModel userModel = new UserModel();
                 userModel.setFullname(resultSet.getString("fullname"));
                 userModel.setUsername(resultSet.getString("username"));

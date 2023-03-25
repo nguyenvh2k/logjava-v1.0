@@ -3,7 +3,3 @@ $(window).load(function () {
     $(".se-pre-con").fadeOut("slow");;
 });
 
-// $(".se-pre-con").show();
-// $(document).ready(function () {
-//      $(".se-pre-con").hide();
-// });
