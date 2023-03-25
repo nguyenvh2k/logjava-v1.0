@@ -14,19 +14,24 @@ public class MySQLUtil {
      * Kết nôi database
      * @return Connection
      */
-    public static Connection getConnection(){
+
+    public Connection createConnection(){
         try {
-//            logger.info("Connecting....");
+            logger.info("Connecting....");
             Class.forName("org.postgresql.Driver");
             String url = "jdbc:postgresql://db.uoddykgmypogipcizabv.supabase.co:5432/postgres";
             String user ="postgres";
             String password ="iLOVEYOU124@#$%^&*()";
             Connection connection = DriverManager.getConnection(url,user,password);
-//            logger.info("Connect success !");
+            logger.info("Connect success !");
             return connection;
         } catch (ClassNotFoundException | SQLException e) {
-            System.out.println("Connection Failed :"+e.getMessage());
+            logger.error("Connection Failed :{}"+e.getMessage());
         }
         return null;
+    }
+
+    public static Connection getConnection(){
+        return new MySQLUtil().createConnection();
     }
 }

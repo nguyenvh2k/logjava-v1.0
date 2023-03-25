@@ -12,4 +12,5 @@ public interface PostService {
     List<PostModel> findComment(Long id);
     void update(PostModel postModel);
     void delete(Long id);
+    List<PostModel> findByUserId(Long id);
 }

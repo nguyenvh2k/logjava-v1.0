@@ -30,9 +30,10 @@
                                 <div class="col-lg-4">
                                   <div class="card mb-4">
                                     <div class="card-body text-center">
-                                      <img src="https://cf.shopee.vn/file/84c835945fa087b972cc0cddd077cb61" alt="avatar"
-                                        class="rounded-circle img-fluid" style="width: 150px;">
-                                      <h5 class="my-3" th:text="${userSession.username}"></h5>
+                                      <img th:src="@{${'/'+userSession.image}}" alt="avatar"
+                                        class="rounded-circle img-fluid" style="width: 150px;height: 150px;" onError="this.src='/images/thumbnail.png'">
+                                      <h5 class="my-3" th:text="${userSession.username}" id="imgAvatar"></h5>
+                                      <input type="hidden" th:value="${userSession.id}" id="idUser">
                                       <button class="btn btn-success" id="avatar">Thay đổi avatar</button>
                                       <p class="text-muted mb-1">Backend Developer</p>
                                       <div class="d-flex justify-content-center mb-2">
@@ -100,35 +101,29 @@
                                     <div class="row mb-5">
                                         <div class="col-md-12 mb-2">
                                           <h2>Bài viết của tôi</h2>
+                                          <th:block th:each="post:${postUser}"
+                                          <div class="post-entry-horzontal">
+                                            <a href="#">
+                                              <div class="row">
+                                                <div class="col-md-4">
+                                              <img class="image" style="width: 100%;" th:src="@{${'/'+post.image}}" onError="this.src='/images/thumbnail.png'">
+                                                </div>
+                                                <div class="col-md-8">
+                                                  <span class="text">
+                                                    <div class="post-meta">
+                                                      <span class="author mr-2" >
+                                                        <img class="mr-2" style="height: 40px;width: 40px;" th:src="${userSession.image}" alt="anh"><th:block th:text="${userSession.fullname}"></th:block>
+                                                      </span>&bullet;
+                                                      <span class="mr-2" th:text="${post.date}"></span> &bullet;
+                                                    </div>
+                                                    <h2 th:text="${post.title}"></h2>
+                                                  </span>
+                                                </div>
+                                              </div>
+                                            </a>
+                                          </div>
+                                          </th:block>
                                         </div>
-                                        <div class="col-md-12">
-                                          <div class="post-entry-horzontal">
-                                            <a href="#">
-                                              <div class="image" style="background-image: url(images/img_11.jpg);"></div>
-                                              <span class="text">
-                                                <div class="post-meta">
-                                                  <span class="author mr-2"><img src="images/person_1.jpg" alt="Colorlib"> Colorlib</span>&bullet;
-                                                  <span class="mr-2">March 15, 2018 </span> &bullet;
-                                                  <span class="ml-2"><span class="fa fa-comments"></span> 3</span>
-                                                </div>
-                                                <h2>There’s a Cool New Way for Men to Wear Socks and Sandals</h2>
-                                              </span>
-                                            </a>
-                                          </div>
-                          
-                                          <div class="post-entry-horzontal">
-                                            <a href="#">
-                                              <div class="image" style="background-image: url(images/img_12.jpg);"></div>
-                                              <span class="text">
-                                                <div class="post-meta">
-                                                  <span class="author mr-2"><img src="images/person_1.jpg" alt="Colorlib"> Colorlib</span>&bullet;
-                                                  <span class="mr-2">March 15, 2018 </span> &bullet;
-                                                  <span class="ml-2"><span class="fa fa-comments"></span> 3</span>
-                                                </div>
-                                                <h2>There’s a Cool New Way for Men to Wear Socks and Sandals</h2>
-                                              </span>
-                                            </a>
-                                          </div>
                                     </div>
                                   </div>
                                 </div>
@@ -159,7 +154,7 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger text-center" id="delete">OK</button>
+                    <button type="button" class="btn btn-danger text-center" id="updateAvatar">OK</button>
                     <button type="button" class="btn btn-secondary text-center" data-dismiss="modal" id="noDelete">Huỷ</button>
                 </div>
             </div>
@@ -167,6 +162,8 @@
         <div id="toast"></div>
     <script th:inline="javascript" type="text/javascript">
         var modal = $('.modal');
+        var image;
+        var dataImg = {};
         $('#avatar').click(function (e) {
             e.preventDefault();
             modal.show();
@@ -174,9 +171,15 @@
                 e.preventDefault();
                 ajaxSubmitForm();
             });
-            $('#delete').click(function (e1) {
+            $('#updateAvatar').click(function (e1) {
                 e1.preventDefault();
-                modal.hide();
+                dataImg["image"]=image;
+                dataImg["id"]=$('#idUser').val();
+                console.log(dataImg);
+                updateAvatar(dataImg);
+                setTimeout(function () {
+                  modal.hide();
+                    }, 3000);
             });
             $('#noDelete').click(function () {
                 modal.hide();
@@ -204,16 +207,44 @@
             showSuccessToast()
           $("#result").val(data);
           $("#pic1").attr("src", data);
+          image = data;
         },
         error: function (jqXHR, textStatus, errorThrown) {
           console.log("ERROR : ", jqXHR.responseText);
         }
       });
     }
+
+    function updateAvatar(data){
+      $.ajax({
+        type: "PUT",
+        url: "/api/v1/user/profile/avatar",
+        data: JSON.stringify(data),
+        contentType:"application/json",
+        success: function (result) {
+            console.log(result);
+            showSuccessToast2();
+            $('#imgAvatar').removeAttr('src');
+            $('#imgAvatar').attr("src", image);
+        },
+        error: function (error) {
+          console.log("ERROR : ",error);
+        }
+      });
+    }
+
     function showSuccessToast() {
       toast({
         title: "Thông báo!",
         message: "Upload ảnh lên máy chủ thành công !",
+        type: "success",
+        duration: 5000
+      });
+    }
+    function showSuccessToast2() {
+      toast({
+        title: "Thông báo!",
+        message: "Cập nhật ảnh đại diện thành công !",
         type: "success",
         duration: 5000
       });

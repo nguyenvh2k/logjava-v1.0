@@ -345,7 +345,7 @@ public class PostRepositoryImpl implements PostRepository {
         ResultSet resultSet = null;
         try {
             connection = MySQLUtil.getConnection();
-            String sql = "select * from posts p join users u on u.id = p.user_id join category c on c.id = p.category_id where p.user_id = ? ";
+            String sql = "select * from posts p join users u on u.id = p.user_id join category c on c.id = p.category_id where p.user_id = ? limit 2 ";
             statement = connection.prepareStatement(sql);
             statement.setLong(1, id);
             resultSet = statement.executeQuery();
@@ -357,7 +357,9 @@ public class PostRepositoryImpl implements PostRepository {
                 UserModel userModel = new UserModel();
                 userModel.setFullname(resultSet.getString("fullname"));
                 userModel.setUsername(resultSet.getString("username"));
+                postModel.setCreatedDate(resultSet.getTimestamp("created_date"));
                 postModel.setUserModel(userModel);
+                postModel.setDate(dateFormat.format(new Date(postModel.getCreatedDate().getTime())));
                 postList.add(postModel);
             }
         } catch (SQLException e) {

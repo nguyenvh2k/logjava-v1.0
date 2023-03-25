@@ -79,8 +79,10 @@ public class UserController {
         model.addAttribute("userSession", user);
         List<CategoryModel> categoryModels = categoryService.findAllNav();
         List<PostModel> postPopular = postService.findByPopular();
+        List<PostModel> postByUser = postService.findByUserId(user.getId());
         model.addAttribute("popular",postPopular);
         model.addAttribute("categories",categoryModels);
+        model.addAttribute("postUser",postByUser);
         return "/web/profile";
     }
 

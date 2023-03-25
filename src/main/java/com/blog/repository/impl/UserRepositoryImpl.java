@@ -106,6 +106,27 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public void updateAvatar(UserModel userModel) {
-        
+        Connection connection = null;
+        PreparedStatement statement = null;
+        try {
+            connection = MySQLUtil.getConnection();
+            connection.setAutoCommit(false);
+            String sql = "update users set avatar = ? where id = ?";
+            statement = connection.prepareStatement(sql);
+            statement.setString(1,userModel.getImage());
+            statement.setLong(2,userModel.getId());
+            statement.executeUpdate();
+            connection.commit();
+            logger.info("Update avatar success !");
+        }catch (SQLException e){
+            logger.error("Update avatar failed !");
+            logger.error("Exception :{}",e.getMessage());
+            try {
+                connection.rollback();
+                logger.warn("Rollback success !");
+            } catch (SQLException ex) {
+                logger.error("Rollback failed !");
+            }
+        }
     }
 }

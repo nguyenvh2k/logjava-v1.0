@@ -64,4 +64,9 @@ public class PostServiceImpl implements PostService {
         postRepository.delete(id);
     }
 
+    @Override
+    public List<PostModel> findByUserId(Long id) {
+        return postRepository.findByUserId(id);
+    }
+
 }

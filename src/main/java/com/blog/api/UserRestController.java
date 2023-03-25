@@ -42,8 +42,9 @@ public class UserRestController {
         return ResponseEntity.ok().body(user);
     }
 
-    @PostMapping("/user/profile/avatar")
+    @PutMapping("/user/profile/avatar")
     public ResponseEntity<?> updateAvatar(@RequestBody UserModel userModel){
+        userService.updateAvatar(userModel);
         return ResponseEntity.ok().build();
     }
 

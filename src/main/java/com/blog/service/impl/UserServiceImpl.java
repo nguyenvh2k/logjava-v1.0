@@ -34,4 +34,9 @@ public class UserServiceImpl implements UserService {
         Boolean result = userRepository.insert(userModel);
         return result;
     }
+
+    @Override
+    public void updateAvatar(UserModel userModel) {
+        userRepository.updateAvatar(userModel);
+    }
 }
