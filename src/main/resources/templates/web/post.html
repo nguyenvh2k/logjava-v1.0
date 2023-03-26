@@ -7,8 +7,11 @@
     <th:block th:insert="~{/layout/logjava::link}"></th:block>
     <th:block th:insert="~{/layout/logjava::head/script}"></th:block>
     <style>
-        .image > img {
+        figure>picture>img {
             width: 100vh;
+        }
+        .img.zoomed {
+            transform: scale(1.5);
         }
     </style>
 </head>
@@ -30,9 +33,9 @@
                         <h1 class="mb-4" th:text="${post.title}"></h1>
                         <input type="hidden" th:value="${post.id}" id="postId">
                         <div class="post-meta">
-                            <span class="author mr-2"><img style="height: 30px;"
-                                    th:src="@{${'/'+post.userModel.getImage}}" alt="Colorlib" class="mr-2"
-                                    th:text="${post.userModel.getFullname}" onError="this.src='/images/avatar.png'"></span>&bullet;
+                            <span class="author mr-2"><img style="height: 30px;" th:src="@{${post.userModel.getImage}}"
+                                    alt="Colorlib" class="mr-2" th:text="${post.userModel.getFullname}"
+                                    onError="this.src='/images/avatar.png'"></span>&bullet;
                             <span class="mr-2" th:text="${post.date}"></span> &bullet;
                             <th:block th:if="${userSession}">
                                 <th:block th:if="${post.userId==userSession.id}">
@@ -56,7 +59,8 @@
                                 <th:block th:each="comment:${comments}">
                                     <li class="comment" th:if="${comment.comment.getContent!=null}">
                                         <div class="vcard">
-                                            <img th:src="@{${'/'+comment.userModel.getImage}}" alt="Image placeholder" style="height: 50px;" onError="this.src='/images/avatar.png'">
+                                            <img th:src="@{${'/'+comment.userModel.getImage}}" alt="Image placeholder"
+                                                style="height: 50px;" onError="this.src='/images/avatar.png'">
                                         </div>
                                         <div class="comment-body">
                                             <h3 th:text="${comment.userModel.getFullname}"></h3>
@@ -79,10 +83,12 @@
                                             <div class="row">
                                                 <div class="col-sm-2">
                                                     <span class="author mr-4">
-                                                        <img th:src="@{${'/'+userSession.image}}" class="rounded-circle"
-                                                            alt="Image placeholder" width="50vh" height="50vh" onError="this.src='/images/avatar.png'" >
+                                                        <img th:src="@{${userSession.image}}" class="rounded-circle"
+                                                            alt="Image placeholder" width="50vh" height="50vh"
+                                                            onError="this.src='/images/avatar.png'">
                                                     </span>
-                                                    <input type="hidden" th:value="${'/'+userSession.image}" id="imgUser">
+                                                    <input type="hidden" th:value="${'/'+userSession.image}"
+                                                        id="imgUser">
                                                 </div>
                                                 <div class="col-sm-10">
                                                     <textarea type="text" class="form-control-range mr-5" id="comment"
@@ -141,14 +147,14 @@
             e.preventDefault();
             var comment = {};
             comment["content"] = $('#comment').val();
-            comment['userId'] = [(${userSession.id})];
-            comment["postId"] = [(${post.id})];
-            var cmt = comment["content"];
-            console.log(comment);
-            addNewComment(comment);
-            $('#comment').val(null);
+            comment['userId'] = [(${ userSession.id })];
+        comment["postId"] = [(${ post.id })];
+        var cmt = comment["content"];
+        console.log(comment);
+        addNewComment(comment);
+        $('#comment').val(null);
         });
-        
+
         // add new comment
         function addNewComment(data) {
             var imageUser = $('#imgUser').val();
@@ -179,6 +185,7 @@
             });
         }
 
+        // delete post
         var modal = $('.modal');
         $('#btnDeletePost').click(function (e) {
             e.preventDefault();
@@ -199,7 +206,7 @@
                 }
             });
         })
-        
+
         // Delete post
         function deletePost(data) {
             $.ajax({
@@ -230,7 +237,13 @@
         }
     </script>
     <!--Post-->
-       
+    <!-- ZOom ảnh -->
+    <script>
+        $('figure').click(function(e){
+            const tgt = e.target;
+            tgt.classList.toggle('zoomed')
+        });
+    </script>
     <th:block th:insert="~{layout/logjava::script}"></th:block>
 </body>
 

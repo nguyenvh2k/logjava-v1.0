@@ -92,15 +92,128 @@
     </label>
   </div>
   <button class="btn btn-lg btn-success btn-block mb-2" type="submit" id="btnSubmit">Đăng nhập</button>
-  <a class="btn" th:href="@{/dang-ky}" style="color:#52BFA1;">Đăng ký tài khoản mới</a>
+  <a class="btn" href="#" style="color:#52BFA1;" id="btnRegister">Đăng ký tài khoản mới</a>
   <a class="btn" th:href="@{/home}" style="color:#52BFA1;">Quay về trang chủ</a>
   <p class="mt-5 mb-3 text-muted">Log Java &copy; 2023</p>
 </form>
+<div class="modal" id="modalRegisterForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Đăng ký tài khoản mới</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-2">
+          <i class="fa fa-user" aria-hidden="true"></i>
+          <label data-error="wrong" data-success="right" for="username-">Tên đăng nhập</label>
+          <span class="text-danger">*</span><span class="text-danger" id="username_error"></span>
+          <input type="text" class="form-control validate username">
+        </div>
+        <div class="md-form mb-2">
+          <i class="fa fa-info" aria-hidden="true"></i>
+          <label data-error="wrong" data-success="right" for="fullname">Tên đầy đủ</label>
+          <span class="text-danger">*</span>
+          <input type="email" id="fullname" class="form-control validate fullname">
+        </div>
+        <div class="md-form mb-2">
+          <i class="fa fa-envelope" aria-hidden="true"></i>
+          <label data-error="wrong" data-success="right" for="email">Email</label>
+          <span class="text-danger">*</span><span class="text-danger" id="email_error"></span>
+          <input type="email" id="email" class="form-control validate email">
+        </div>
+        <div class="md-form mb-2">
+          <i class="fa fa-lock prefix grey-text"></i>
+          <label data-error="wrong" data-success="right" for="password">Mật khẩu</label>
+          <span class="text-danger">*</span><span class="text-danger" id="password_error"></span>
+          <input type="password"  class="form-control validate password">
+        </div>
+        <div class="md-form mb-2">
+          <i class="fa fa-lock prefix grey-text"></i>
+          <label data-error="wrong" data-success="right" for="repassword">Xác nhận mật khẩu</label>
+          <span class="text-danger">*</span><span class="text-danger" id="passcheck"></span>
+          <input type="password" id="repassword" class="form-control validate repassword">
+        </div>
+      </div>
+      <div class="modal-footer d-flex justify-content-center">
+        <button class="btn btn-success" id="register">Đăng ký</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div id="toast"></div>
+
 
 <script th:src="@{/js/toast.js}"></script>
 <script type="text/javascript" th:inline="javascript">
-  
+  var modal = $('.modal');
+  // register 
+  $('#btnRegister').click(function(e){
+    e.preventDefault();
+    modal.show();
+    var dataUser = {};
+    var flag = false;
+    var username = $.trim($('.username').val());
+    var password = $.trim($('.password').val());
+    var email = $.trim($('.email').val());
+
+    $('.repassword').keyup(function(e){
+      var repassword = $('.repassword').val();
+        if(password!=repassword){
+          $('#passcheck').text("Mật khẩu không khớp");
+          flag =false;
+       }else{
+          $('#passcheck').text("");
+          flag = true;
+       }
+      })
+    $('#register').click(function(e){
+      e.preventDefault();
+      var username = $.trim($('.username').val());
+      var password = $.trim($('.password').val());
+      var email = $.trim($('.email').val());
+      if (username == '' || username.length < 4){
+            $('#username_error').text(' Tên đăng nhập phải lớn hơn 4 ký tự');
+            flag = false;
+        }
+        else{
+            $('#username_error').text('');
+            flag = true;
+        }
+      if(password.match(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/)){
+        $('#password_error').text('');
+        flag = true;
+      }else{
+        $('#password_error').text(' Mật khẩu phải có chữ in hoa, chữ thường và ký tự đặc biệt');
+        flag = false;
+      }
+      if(email.match(/[A-Z0-9._%+-]+@[A-Z0-9-]+.+.[A-Z]{2,4}/igm)){
+        $('#email_error').text('');
+        flag = true;
+      }else{
+        $('#email_error').text(' Email không đúng định dạng');
+        flag=false;
+      }
+      if(flag==true){
+        dataUser["usename"] = usename;
+        dataUser["fullname"]=fullname;
+        dataUser["email"]=email;
+        dataUser["password"] = password
+        console.log(dataUser);
+      }
+    })
+
+    $('.close').click(function(e){
+      modal.hide();
+    })
+  })
+
+
+  // login
   $('#btnSubmit').click(function(e){
     e.preventDefault();
     var data = {};

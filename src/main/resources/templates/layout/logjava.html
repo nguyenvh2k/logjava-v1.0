@@ -21,6 +21,7 @@
             th:src="@{/jquery/jquery-3.6.4.min.js}"></script>
     <script type="text/javascript" src="../static/jquery/jquery.twbsPagination.min.js"
             th:src="@{/jquery/jquery.twbsPagination.js}"></script>
+    <script type="text/javascript" th:src="@{/jquery/image-zoom.js}"></script>
 </head>
 <style>
      .avatar {
@@ -92,7 +93,7 @@
                                 <div class="dropdown-menu" aria-labelledby="dropdown05">
                                     <div class="post-meta p-2">
                                         <span class="">
-                                            <img class="mr-2" style="width: 30px;height: 30px;border-radius: 50%;display: inline-block;" th:src="@{${'/'+userSession.image}}" onError="this.src='/images/avatar.png'">
+                                            <img class="mr-2" style="width: 30px;height: 30px;border-radius: 50%;display: inline-block;" th:src="@{${userSession.image}}" onError="this.src='/images/avatar.png'">
                                             <th:block th:text="${userSession.fullname}"></th:block>
                                         </span>
                                     </div>
