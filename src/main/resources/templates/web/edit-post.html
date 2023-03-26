@@ -46,6 +46,13 @@
                   <form method="POST" enctype="multipart/form-data" id="fileUploadForm">
                     <input type="file" name="files" id="fImage" accept=".jpg, .png" /><br />
                     <input type="submit" class="btn btn-success mt-2" value="Upload" id="submitButton"/>
+                    <div class="progress mt-2 mb-2">
+                      <div class="progress-bar progress-bar-success progress-bar-striped 
+                      active" role="progressbar"
+                      aria-valuemin="0" aria-valuemax="100" style="width:0%">
+                      0%
+                      </div>
+                  </div>
                     <input type="hidden" id="result"/>
                   </form>
                   <h3>Xem trước:</h3>
@@ -246,6 +253,20 @@
 
       $("#submitButton").prop("disabled", true);
       $.ajax({
+        xhr: function () {
+                    var xhr = new window.XMLHttpRequest();
+
+                    xhr.upload.addEventListener("progress", function (evt) {
+                        if (evt.lengthComputable) {
+                            var percentComplete = evt.loaded / evt.total;
+                            percentComplete = parseInt(percentComplete * 100);
+                            $('.progress-bar').width(percentComplete + '%');
+                            $('.progress-bar').html(percentComplete + '%');
+                        }
+                    }, false);
+
+                    return xhr;
+                },
         type: "POST",
         enctype: 'multipart/form-data',
         url: "/api/v1/firebase/upload",

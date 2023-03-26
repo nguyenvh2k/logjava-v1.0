@@ -40,7 +40,7 @@ public class PostRepositoryImpl implements PostRepository {
         PreparedStatement statement = null;
         try {
             connection = MySQLUtil.getConnection();
-            String sql = "select * from posts p join users u on u.id = p.user_id join category c2 on c2.id = p.category_id";
+            String sql = "select * from posts p join users u on u.id = p.user_id join category c2 on c2.id = p.category_id order by p.created_date desc";
             statement = connection.prepareStatement(sql);
             resultSet = statement.executeQuery();
             while (resultSet.next()){
@@ -130,7 +130,7 @@ public class PostRepositoryImpl implements PostRepository {
         PreparedStatement statement = null;
         try {
             connection = MySQLUtil.getConnection();
-            String sql = "select * from posts limit 3;";
+            String sql = "select * from posts order by created_date desc limit 3;";
             statement = connection.prepareStatement(sql);
             resultSet = statement.executeQuery();
             while (resultSet.next()){
@@ -146,7 +146,7 @@ public class PostRepositoryImpl implements PostRepository {
             }
             logger.info("Get the list of highly viewed posts successfully !");
         }catch (SQLException e){
-            logger.error("Get list of posts by id failed !");
+            logger.error("Get list of posts popular failed !");
             logger.error("Exception : {}",e.getMessage());
         }
         return posts;

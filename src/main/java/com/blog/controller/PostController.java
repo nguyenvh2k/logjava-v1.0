@@ -121,4 +121,9 @@ public class PostController {
         model.addAttribute("popular",postPopular);
         return "/web/edit-post";
     }
+
+    @GetMapping("/test")
+    public String test(){
+        return "index";
+    }
 }
